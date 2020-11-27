@@ -1,6 +1,10 @@
+import java.util.*;
+import projectPart1.*;
 
 public class Test {
 	public static void main(String args[]) {
-		System.out.println("Hello World !!");
+		BPLusTree bPlusTree = new BPLusTree();
+		
+		System.out.println(bPlusTree.welcome());
 	}
 }
