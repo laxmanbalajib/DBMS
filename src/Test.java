@@ -3,8 +3,12 @@ import projectPart1.*;
 
 public class Test {
 	public static void main(String args[]) {
-		BPLusTree bPlusTree = new BPLusTree();
+		BPLusTree bPlusTree = new BPLusTree(3);
 		
-		System.out.println(bPlusTree.welcome());
+		bPlusTree.insert(1, 3);
+		
+		Node root = bPlusTree.welcome();
+		
+		System.out.println(root);
 	}
 }

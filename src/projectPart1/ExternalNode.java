@@ -1,5 +1,7 @@
 package projectPart1;
 
+import java.util.Arrays;
+
 public class ExternalNode extends Node{
 	private int order;
 	private int insertIndex;
@@ -44,6 +46,11 @@ public class ExternalNode extends Node{
 		ExternalNodeElement newNodeElement = new ExternalNodeElement(key, record);
 		
 		externalNodeElements[this.insertIndex] = newNodeElement;
+	}
+
+	@Override
+	public String toString() {
+		return "ExternalNode " + Arrays.toString(externalNodeElements);
 	}
 
 }

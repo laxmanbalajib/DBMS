@@ -15,15 +15,18 @@ public class BPLusTree {
 		
 		//recurse until you reach one of the leafnodes
 		while(!curr.isExternalNode()) {
-			if (!curr.isFull()) {
-				curr.insert(key, record);
-			}
+			
+
+		}
+		
+		if (!curr.isFull()) {
+			curr.insert(key, record);
 		}
 	}
 
 
-	public String welcome() {
-		return "hello";
+	public Node welcome() {
+		return root;
 	}
 	
 }

@@ -25,6 +25,11 @@ public class ExternalNodeElement extends NodeElement{
 		this.key = key;
 		this.record = record;
 	}
+
+	@Override
+	public String toString() {
+		return "[key=" + key + ", record=" + record + "]";
+	}
 	
 	
 }
