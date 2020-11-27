@@ -16,6 +16,8 @@ public class BPLusTree {
 
 		// move finding leaf node to a seperate method
 		// recurse until you reach one of the leafnodes
+		
+		//TODO: search keys by binary search
 		while (!curr.isExternalNode()) {
 			NodeElement[] nodeElements = curr.getNodeElements();
 			
@@ -42,9 +44,9 @@ public class BPLusTree {
 
 			curr.splitNode();
 			this.updateParent(curr, curr.getNextExternalNode());
-			// probably shpuldn't recurse again since swaps between disk and main memory is costly
+			
+			// TODO:probably shpuldn't recurse again since swaps between disk and main memory is costly
 			this.insert(key, record);
-			// change parent
 		}
 		
 		

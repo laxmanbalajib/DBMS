@@ -1,6 +1,7 @@
 package projectPart1;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class ExternalNode extends Node{
 	private int order;
@@ -49,6 +50,7 @@ public class ExternalNode extends Node{
 		ExternalNodeElement newNodeElement = new ExternalNodeElement(key, record);
 		
 		externalNodeElements[this.insertIndex] = newNodeElement;
+		Arrays.sort(externalNodeElements, new sortByKey());
 		this.insertIndex++;
 	}
 	
@@ -85,6 +87,15 @@ public class ExternalNode extends Node{
 	@Override
 	public void setParentNode(InternalNode parentNode) {
 		this.parentNode = parentNode;
+	}
+	
+	public class sortByKey implements Comparator<NodeElement>{
+		public int compare(NodeElement a, NodeElement b) {
+			
+			if (a == null || b == null) return 1;
+			return a.getKey() - b.getKey();
+			
+		}
 	}
 
 }

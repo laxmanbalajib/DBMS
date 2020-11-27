@@ -1,6 +1,9 @@
 package projectPart1;
 
 import java.util.Arrays;
+import java.util.Comparator;
+
+import projectPart1.ExternalNode.sortByKey;
 
 public class InternalNode extends Node {
 
@@ -38,6 +41,7 @@ public class InternalNode extends Node {
 	public void insert(int key, Node child) {
 		NodeElement newNodeElement = new InternalNodeElement(key, child);
 		this.internalNodeElements[this.insertIndex] = newNodeElement;
+		Arrays.sort(internalNodeElements, new sortByKey());
 		this.insertIndex++;
 	}
 	
@@ -83,5 +87,14 @@ public class InternalNode extends Node {
 		}
 		
 		return newInternalNode;
+	}
+	
+	public class sortByKey implements Comparator<NodeElement>{
+		public int compare(NodeElement a, NodeElement b) {
+			
+			if (a == null || b == null) return 1;
+			return a.getKey() - b.getKey();
+			
+		}
 	}
 }
