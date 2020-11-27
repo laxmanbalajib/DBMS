@@ -13,6 +13,7 @@ public class BPLusTree {
 	public void insert(int key, int record) {
 		Node curr = root;
 		
+		//move finding leaf node to a seperate method
 		//recurse until you reach one of the leafnodes
 		while(!curr.isExternalNode()) {
 			
@@ -21,6 +22,11 @@ public class BPLusTree {
 		
 		if (!curr.isFull()) {
 			curr.insert(key, record);
+		} else {
+			
+			curr.splitNode();
+			
+			//change parent
 		}
 	}
 

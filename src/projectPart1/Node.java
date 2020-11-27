@@ -21,4 +21,9 @@ public class Node {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void splitNode() {
+		// TODO Auto-generated method stub
+		
+	}
 }

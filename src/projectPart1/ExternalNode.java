@@ -21,7 +21,7 @@ public class ExternalNode extends Node{
 	
 	@Override
 	public boolean isFull() {
-		return insertIndex == (order - 1);
+		return insertIndex == order;
 	}
 	
 	@Override
@@ -46,11 +46,31 @@ public class ExternalNode extends Node{
 		ExternalNodeElement newNodeElement = new ExternalNodeElement(key, record);
 		
 		externalNodeElements[this.insertIndex] = newNodeElement;
+		this.insertIndex++;
+	}
+	
+	public void insert(NodeElement nodeElement){	
+		externalNodeElements[this.insertIndex] = nodeElement;
+		this.insertIndex++;
+	}
+	
+	@Override
+	public void splitNode() {
+		ExternalNode newExternalNode  = new ExternalNode(this.order);
+		
+		for (int i = 0; i < this.externalNodeElements.length/2;i++) {
+			newExternalNode.insert(this.externalNodeElements[this.order - i - 1]);
+			this.externalNodeElements[this.order - 1 - i] = null; //delete
+		}
+		
+		newExternalNode.setNextExternalNode(this.nextExternalNode);
+		this.nextExternalNode = newExternalNode;
 	}
 
 	@Override
 	public String toString() {
-		return "ExternalNode " + Arrays.toString(externalNodeElements);
+		return "ExternalNode " + Arrays.toString(externalNodeElements) +
+			"  NextNode->" + ((this.nextExternalNode != null) ? nextExternalNode.toString() : "null");
 	}
 
 }
