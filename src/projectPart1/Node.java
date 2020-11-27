@@ -46,4 +46,8 @@ public class Node {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public Node splitNode(Node leftMostChild) {
+		return null;
+	}
 }

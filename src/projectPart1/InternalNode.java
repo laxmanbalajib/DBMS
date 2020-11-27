@@ -11,7 +11,7 @@ public class InternalNode extends Node {
 	private NodeElement[] internalNodeElements;
 	
 	private InternalNode parentNode;
-
+	
 	public InternalNode(int order, Node leftMostChild) {
 		this.order = order;
 		this.insertIndex = 0;
@@ -37,6 +37,11 @@ public class InternalNode extends Node {
 	
 	public void insert(int key, Node child) {
 		NodeElement newNodeElement = new InternalNodeElement(key, child);
+		this.internalNodeElements[this.insertIndex] = newNodeElement;
+		this.insertIndex++;
+	}
+	
+	public void insert(NodeElement newNodeElement) {
 		this.internalNodeElements[this.insertIndex] = newNodeElement;
 		this.insertIndex++;
 	}
@@ -66,5 +71,17 @@ public class InternalNode extends Node {
 		}
 		return result;
 	}
-
+	
+	@Override
+	public Node splitNode(Node leftMostChild) {
+		InternalNode newInternalNode  = new InternalNode(this.order, leftMostChild);
+		
+		for (int i = 0; i < this.internalNodeElements.length/2;i++) {
+			newInternalNode.insert(this.internalNodeElements[this.order - i - 1]);
+			this.internalNodeElements[this.order - 1 - i] = null; //delete
+			this.insertIndex--;
+		}
+		
+		return newInternalNode;
+	}
 }
