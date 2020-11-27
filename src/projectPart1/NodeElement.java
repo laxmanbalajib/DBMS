@@ -1,5 +1,5 @@
 package projectPart1;
 
-public interface NodeElement {
+public class NodeElement {
 	
 }

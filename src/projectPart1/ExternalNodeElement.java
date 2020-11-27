@@ -1,7 +1,7 @@
 package projectPart1;
 
-//implement comparable to enable sorting
-public class ExternalNodeElement {
+//implement comparable to ena
+public class ExternalNodeElement extends NodeElement{
 	private int key;
 	private int record; // change this into a pointer to a record
 
@@ -20,4 +20,11 @@ public class ExternalNodeElement {
 	public void setRecord(int record) {
 		this.record = record;
 	}
+
+	public ExternalNodeElement(int key, int record) {
+		this.key = key;
+		this.record = record;
+	}
+	
+	
 }
