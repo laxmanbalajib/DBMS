@@ -8,6 +8,8 @@ public class ExternalNode extends Node{
 	private ExternalNode nextExternalNode;
 	private NodeElement[] externalNodeElements;
 	
+	private InternalNode parentNode;
+	
 	public ExternalNode(int order) {
 		this.order = order;
 		this.insertIndex = 0;
@@ -29,6 +31,7 @@ public class ExternalNode extends Node{
 		return true;
 	}
 
+	@Override
 	public ExternalNode getNextExternalNode() {
 		return nextExternalNode;
 	}
@@ -61,6 +64,7 @@ public class ExternalNode extends Node{
 		for (int i = 0; i < this.externalNodeElements.length/2;i++) {
 			newExternalNode.insert(this.externalNodeElements[this.order - i - 1]);
 			this.externalNodeElements[this.order - 1 - i] = null; //delete
+			this.insertIndex--;
 		}
 		
 		newExternalNode.setNextExternalNode(this.nextExternalNode);
@@ -69,8 +73,17 @@ public class ExternalNode extends Node{
 
 	@Override
 	public String toString() {
-		return "ExternalNode " + Arrays.toString(externalNodeElements) +
-			"  NextNode->" + ((this.nextExternalNode != null) ? nextExternalNode.toString() : "null");
+		return "ExternalNode " + Arrays.toString(externalNodeElements);
+		//return "ExternalNode " + Arrays.toString(externalNodeElements) + "  NextNode->" + ((this.nextExternalNode != null) ? nextExternalNode.toString() : "null");
+	}
+
+	@Override
+	public InternalNode getParentNode() {
+		return parentNode;
+	}
+
+	public void setParentNode(InternalNode parentNode) {
+		this.parentNode = parentNode;
 	}
 
 }

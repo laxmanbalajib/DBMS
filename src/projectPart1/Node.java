@@ -26,4 +26,19 @@ public class Node {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public Node getNextExternalNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public InternalNode getParentNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Node getLeftMostChild() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

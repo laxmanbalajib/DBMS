@@ -15,6 +15,12 @@ public class InternalNodeElement extends NodeElement{
 		return key;
 	}
 
+	@Override
+	public String toString() {
+		return "[key=" + key + "]";
+	}
+	
+	@Override
 	public Node getRightChild() {
 		return rightChild;
 	}
