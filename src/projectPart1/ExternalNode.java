@@ -1,17 +1,27 @@
 package projectPart1;
 
 public class ExternalNode implements Node{
-
+	private ExternalNode nextExternalNode;
+	private NodeElement[] externalNodeElements;
+	
+	
 	@Override
-	public int getValue() {
-		// TODO Auto-generated method stub
-		return 0;
+	public NodeElement[] getNodeElements() {
+		return externalNodeElements;
 	}
 
-	@Override
-	public Node[] getChildren() {
-		// TODO Auto-generated method stub
-		return null;
+	public ExternalNode getNextExternalNode() {
+		return nextExternalNode;
+	}
+
+	public void setNextExternalNode(ExternalNode nextExternalNode) {
+		this.nextExternalNode = nextExternalNode;
+	}
+
+
+
+	public void setNodeElements(NodeElement[] nodeElements) {
+		this.externalNodeElements = nodeElements;
 	}
 
 }
