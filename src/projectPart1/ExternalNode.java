@@ -81,7 +81,8 @@ public class ExternalNode extends Node{
 	public InternalNode getParentNode() {
 		return parentNode;
 	}
-
+	
+	@Override
 	public void setParentNode(InternalNode parentNode) {
 		this.parentNode = parentNode;
 	}

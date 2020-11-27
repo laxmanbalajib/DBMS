@@ -28,7 +28,7 @@ public class ExternalNodeElement extends NodeElement{
 
 	@Override
 	public String toString() {
-		return "[key=" + key + ", record=" + record + "]";
+		return "[key=" + key + "]";
 	}
 	
 	

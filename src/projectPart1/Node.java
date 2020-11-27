@@ -41,4 +41,9 @@ public class Node {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public void setParentNode(InternalNode parent) {
+		// TODO Auto-generated method stub
+		
+	}
 }

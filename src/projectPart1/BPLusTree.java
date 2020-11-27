@@ -16,9 +16,22 @@ public class BPLusTree {
 		// move finding leaf node to a seperate method
 		// recurse until you reach one of the leafnodes
 		while (!curr.isExternalNode()) {
-			curr = root.getLeftMostChild();
-		}
+			NodeElement[] nodeElements = curr.getNodeElements();
+			
+			if (nodeElements[0].getKey() > key) {
+				curr = curr.getLeftMostChild();
+			}else {
+				for (int i = 1; i < nodeElements.length; i++) {
+					
+					if(nodeElements[i] == null || nodeElements[i].getKey() > key) {
+						curr = nodeElements[i - 1].getRightChild();
+						break;
+					}
+				}				
+			}
 
+		}
+		
 		if (!curr.isFull()) {
 			curr.insert(key, record);
 		} else {
@@ -44,8 +57,10 @@ public class BPLusTree {
 			parent = new InternalNode(this.order, splitNode);
 			parent.insert(key, newlySplitNode);
 			root = parent;
-		} else {
-			
+			splitNode.setParentNode(parent);
+			newlySplitNode.setParentNode(parent);
+		} else if (!parent.isFull()){
+			parent.insert(key, newlySplitNode);
 		}
 	}
 
