@@ -47,6 +47,7 @@ public class InternalNode extends Node {
 	
 	public void insert(NodeElement newNodeElement) {
 		this.internalNodeElements[this.insertIndex] = newNodeElement;
+		Arrays.sort(internalNodeElements, new sortByKey());
 		this.insertIndex++;
 	}
 
@@ -67,7 +68,13 @@ public class InternalNode extends Node {
 	public String toString() {
 		
 		String result = "InternalNode \n";
-		result += Arrays.toString(internalNodeElements) + "\n";
+		
+		result+= "[";
+		for (int i = 0; i < this.order; i++) {
+			result += internalNodeElements[i];
+			if (i != this.order - 1) result+=", ";
+		}
+		result += "]\n";
 		result += this.leftMostChild + "\n";
 		for (NodeElement el: internalNodeElements) {
 			if (el == null) continue;
@@ -84,17 +91,20 @@ public class InternalNode extends Node {
 		int mid = (this.order + 1) / 2;
 		int key = this.internalNodeElements[mid].getKey();
 		Node leftMostChild = this.internalNodeElements[mid].getRightChild();
+		
 		this.internalNodeElements[mid] = null; //delete
 		this.insertIndex--;
 		
 		InternalNode newInternalNode  = new InternalNode(this.order, leftMostChild);
+		leftMostChild.setParentNode(newInternalNode);
+		
+		
 		
 		for (int i = mid + 1; i < this.order + 1;i++) {
 			newInternalNode.insert(this.internalNodeElements[i]);
 			this.internalNodeElements[i] = null; //delete
 			this.insertIndex--;
 		}
-		
 		result.key = key;
 		result.node = newInternalNode;
 		return result;

@@ -42,8 +42,8 @@ public class BPLusTree {
 		if (!curr.isFull()) {
 			curr.insert(key, record);
 		} else {
-
 			curr.splitNode();
+	
 			
 			this.updateParent(curr, curr.getNextExternalNode(), curr.getNextExternalNode().getNodeElements()[0].getKey());
 			
@@ -56,7 +56,7 @@ public class BPLusTree {
 	
 	private void updateParent(Node splitNode, Node newlySplitNode, int newKey) {
 		InternalNode parent = splitNode.getParentNode();
-
+ 
 		if (parent == null) {
 			parent = new InternalNode(this.order, splitNode);
 			parent.insert(newKey, newlySplitNode);
@@ -72,6 +72,7 @@ public class BPLusTree {
 			newlySplitNode.setParentNode(parent);
 			
 			NodeKeyPair nodeKeyPair = parent.splitInternalNode();
+			newlySplitNode.setParentNode((InternalNode) nodeKeyPair.node);
 			
 			this.updateParent(parent, nodeKeyPair.node, nodeKeyPair.key);
 		}

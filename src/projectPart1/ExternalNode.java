@@ -56,6 +56,7 @@ public class ExternalNode extends Node{
 	
 	public void insert(NodeElement nodeElement){	
 		externalNodeElements[this.insertIndex] = nodeElement;
+		Arrays.sort(externalNodeElements, new sortByKey());
 		this.insertIndex++;
 	}
 	
