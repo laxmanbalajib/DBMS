@@ -19,6 +19,7 @@ public class BPLusTree {
 		
 		//TODO: search keys by binary search
 		while (!curr.isExternalNode()) {
+			//System.out.println(curr);
 			NodeElement[] nodeElements = curr.getNodeElements();
 			
 			if (nodeElements[0].getKey() > key) {
@@ -43,37 +44,36 @@ public class BPLusTree {
 		} else {
 
 			curr.splitNode();
-			this.updateParent(curr, curr.getNextExternalNode());
 			
-			// TODO:probably shpuldn't recurse again since swaps between disk and main memory is costly
+			this.updateParent(curr, curr.getNextExternalNode(), curr.getNextExternalNode().getNodeElements()[0].getKey());
+			
+			// TODO:probably shpuldn't recurse again s;nce swaps between disk and main memory is costly
 			this.insert(key, record);
 		}
 		
 		
 	}
 	
-	private void updateParent(Node splitNode, Node newlySplitNode) {
-		
-		NodeElement firstNodeElement = newlySplitNode.getNodeElements()[0];
-		
-		int key = firstNodeElement.getKey();
-		
+	private void updateParent(Node splitNode, Node newlySplitNode, int newKey) {
 		InternalNode parent = splitNode.getParentNode();
 
-		
 		if (parent == null) {
 			parent = new InternalNode(this.order, splitNode);
-			parent.insert(key, newlySplitNode);
+			parent.insert(newKey, newlySplitNode);
 			root = parent;
 			splitNode.setParentNode(parent);
 			newlySplitNode.setParentNode(parent);
 		} else if (!parent.isFull()){
-			parent.insert(key, newlySplitNode);
+			parent.insert(newKey, newlySplitNode);
 			newlySplitNode.setParentNode(parent);
-		} else {
-			Node newlySplitParentNode = parent.splitNode(newlySplitNode);
 			
-			this.updateParent(parent, newlySplitParentNode);
+		} else {
+			parent.insert(newKey, newlySplitNode);
+			newlySplitNode.setParentNode(parent);
+			
+			NodeKeyPair nodeKeyPair = parent.splitInternalNode();
+			
+			this.updateParent(parent, nodeKeyPair.node, nodeKeyPair.key);
 		}
 		
 	}

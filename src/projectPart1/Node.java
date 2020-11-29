@@ -47,7 +47,7 @@ public class Node {
 		
 	}
 
-	public Node splitNode(Node leftMostChild) {
+	public NodeKeyPair splitInternalNode() {
 		return null;
 	}
 }

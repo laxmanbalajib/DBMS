@@ -20,7 +20,7 @@ public class InternalNode extends Node {
 		this.insertIndex = 0;
 		
 		this.leftMostChild = leftMostChild;
-		this.internalNodeElements = new InternalNodeElement[this.order];
+		this.internalNodeElements = new InternalNodeElement[this.order + 1];
 	}
 
 	@Override
@@ -77,16 +77,27 @@ public class InternalNode extends Node {
 	}
 	
 	@Override
-	public Node splitNode(Node leftMostChild) {
+	public NodeKeyPair splitInternalNode() {
+		
+		NodeKeyPair result = new NodeKeyPair();
+		
+		int mid = (this.order + 1) / 2;
+		int key = this.internalNodeElements[mid].getKey();
+		Node leftMostChild = this.internalNodeElements[mid].getRightChild();
+		this.internalNodeElements[mid] = null; //delete
+		this.insertIndex--;
+		
 		InternalNode newInternalNode  = new InternalNode(this.order, leftMostChild);
 		
-		for (int i = 0; i < this.internalNodeElements.length/2;i++) {
-			newInternalNode.insert(this.internalNodeElements[this.order - i - 1]);
-			this.internalNodeElements[this.order - 1 - i] = null; //delete
+		for (int i = mid + 1; i < this.order + 1;i++) {
+			newInternalNode.insert(this.internalNodeElements[i]);
+			this.internalNodeElements[i] = null; //delete
 			this.insertIndex--;
 		}
 		
-		return newInternalNode;
+		result.key = key;
+		result.node = newInternalNode;
+		return result;
 	}
 	
 	public class sortByKey implements Comparator<NodeElement>{
