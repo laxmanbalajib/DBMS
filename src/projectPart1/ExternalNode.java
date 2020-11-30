@@ -28,6 +28,11 @@ public class ExternalNode extends Node{
 	}
 	
 	@Override
+	public boolean isHalfFull() {
+		return insertIndex == order/2;
+	}
+	
+	@Override
 	public boolean isExternalNode() {
 		return true;
 	}
@@ -52,6 +57,14 @@ public class ExternalNode extends Node{
 		externalNodeElements[this.insertIndex] = newNodeElement;
 		Arrays.sort(externalNodeElements, new sortByKey());
 		this.insertIndex++;
+	}
+	
+	@Override
+	public void delete(int deleteIndex){
+		
+		externalNodeElements[deleteIndex] = null;
+		Arrays.sort(externalNodeElements, new sortByKey());
+		this.insertIndex--;
 	}
 	
 	public void insert(NodeElement nodeElement){	

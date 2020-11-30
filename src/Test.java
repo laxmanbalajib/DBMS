@@ -9,13 +9,19 @@ public class Test {
 		
 		for (int i : arr) {
 			bPlusTree.insert(i, i);
-			System.out.println("insert "  + i);
-			Node root = bPlusTree.welcome();
-			
-			System.out.println("\ntree" + root);
+			//System.out.println("insert "  + i);
+
 
 		}
 		
-
+		Node root = bPlusTree.welcome();
+		
+		System.out.println("\ntree\n" + root);
+		
+		bPlusTree.delete(24);
+		
+		root = bPlusTree.welcome();
+		bPlusTree.delete(10);
+		System.out.println("\ntree\n" + root);
 	}
 }

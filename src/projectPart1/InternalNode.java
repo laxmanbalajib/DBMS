@@ -3,8 +3,6 @@ package projectPart1;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import projectPart1.ExternalNode.sortByKey;
-
 public class InternalNode extends Node {
 
 	private int order;

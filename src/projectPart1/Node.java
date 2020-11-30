@@ -50,4 +50,14 @@ public class Node {
 	public NodeKeyPair splitInternalNode() {
 		return null;
 	}
+
+	public boolean isHalfFull() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void delete(int index) {
+		// TODO Auto-generated method stub
+		
+	}
 }
