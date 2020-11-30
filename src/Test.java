@@ -5,7 +5,7 @@ public class Test {
 	public static void main(String args[]) {
 		BPLusTree bPlusTree = new BPLusTree(2);
 		
-		int[] arr = new int[] {1,2,3,4,5,6};
+		int[] arr = new int[] {1,2,3,7,8,4,5,6,9,10};
 		
 		for (int i : arr) {
 			bPlusTree.insert(i, i);

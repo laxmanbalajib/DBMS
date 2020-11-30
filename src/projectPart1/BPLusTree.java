@@ -42,13 +42,11 @@ public class BPLusTree {
 		if (!curr.isFull()) {
 			curr.insert(key, record);
 		} else {
+			curr.insert(key, record);
 			curr.splitNode();
 	
 			
 			this.updateParent(curr, curr.getNextExternalNode(), curr.getNextExternalNode().getNodeElements()[0].getKey());
-			
-			// TODO:probably shpuldn't recurse again s;nce swaps between disk and main memory is costly
-			this.insert(key, record);
 		}
 		
 		

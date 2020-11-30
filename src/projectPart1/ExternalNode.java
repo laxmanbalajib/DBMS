@@ -14,7 +14,7 @@ public class ExternalNode extends Node{
 	public ExternalNode(int order) {
 		this.order = order;
 		this.insertIndex = 0;
-		this.externalNodeElements = new ExternalNodeElement[this.order];
+		this.externalNodeElements = new ExternalNodeElement[this.order + 1];
 	}
 	
 	@Override
@@ -64,9 +64,13 @@ public class ExternalNode extends Node{
 	public void splitNode() {
 		ExternalNode newExternalNode  = new ExternalNode(this.order);
 		
-		for (int i = 0; i < this.externalNodeElements.length/2;i++) {
-			newExternalNode.insert(this.externalNodeElements[this.order - i - 1]);
-			this.externalNodeElements[this.order - 1 - i] = null; //delete
+		int mid = (this.order + 1)/2;
+		
+		
+		
+		for (int i = mid; i < this.order + 1; i++) {
+			newExternalNode.insert(this.externalNodeElements[i]);
+			this.externalNodeElements[i] = null; //delete
 			this.insertIndex--;
 		}
 		
