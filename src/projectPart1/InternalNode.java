@@ -101,6 +101,7 @@ public class InternalNode extends Node {
 		
 		
 		for (int i = mid + 1; i < this.order + 1;i++) {
+			this.internalNodeElements[i].getRightChild().setParentNode(newInternalNode);
 			newInternalNode.insert(this.internalNodeElements[i]);
 			this.internalNodeElements[i] = null; //delete
 			this.insertIndex--;
