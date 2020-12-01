@@ -65,7 +65,7 @@ public class PartBMainClass {
 		for (int i = 0; i < Math.ceil((double) tupleSize / blockSize); i++) {
 			diskReadForHashing(virtualDisk, virtualMainMemory, relationName, i);
 			Block mainMemoryBlock = virtualMainMemory.getBlock(0);
-			System.out.println(mainMemoryBlock);
+			
 			Tuple[] tuples = mainMemoryBlock.getAllTuples();
 			for (int j = 0; j < tuples.length; j++) {
 				int hashValue = 1 + ("" + tuples[j].getbValue()).hashCode() % 14;
@@ -78,12 +78,13 @@ public class PartBMainClass {
 			}
 		}
 		
-		/*
+	
 		// after all values have been hashed write to disk
 		for (int i = 1; i < 15; i++) {
+			
 			virtualDisk.writeBlockToBucket(relationName, i, virtualMainMemory.getBlock(i));
 		}
-		*/
+
 		// clean virtual main memory
 		virtualMainMemory.clearMainMemory();
 	}

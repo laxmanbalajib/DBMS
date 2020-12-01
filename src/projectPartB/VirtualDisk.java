@@ -92,8 +92,7 @@ public class VirtualDisk {
 		result = buckets.get(bucketNumber).get(diskHead.get(blockType));
 		
 		diskHead.put(blockType, 1 + diskHead.get(blockType));
-		//System.out.println(blockType);
-		//System.out.println(result);
+		
 		return result;
 	}
 }
