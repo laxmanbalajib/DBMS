@@ -10,6 +10,11 @@ public class RJoinS extends Tuple{
 		this.cValue = S.getcValue();
 		this.aValue = R.getaValue();
 	}
+	
+	@Override
+	public int getbValue() {
+		return this.bValue;
+	}
 
 	@Override
 	public String toString() {

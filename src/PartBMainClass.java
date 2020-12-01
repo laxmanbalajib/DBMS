@@ -2,6 +2,9 @@ import java.util.*;
 import projectPartB.*;
 
 public class PartBMainClass {
+	
+	public static List<Integer> testValues = new ArrayList<>();
+	
 	public static void main(String[] args) {
 		VirtualDisk virtualDisk = new VirtualDisk();
 
@@ -10,6 +13,26 @@ public class PartBMainClass {
 		initialVirtualDisk(virtualDisk);
 
 		hashJoin(virtualDisk, virtualMainMemory);
+		
+		List<Block> blocks = virtualDisk.getAllBlocks("R1 S");
+		
+		for (int i = 0; i < testValues.size(); i++) {
+			int bValue = testValues.get(i);
+			
+			System.out.println("For a B value of " + bValue);
+			for(Block block: blocks) {
+				Tuple[] tuples = block.getAllTuples();
+				
+				for (int j = 0; j < tuples.length; j++) {
+					if (tuples[j] == null) continue;
+
+					if (tuples[j].getbValue() == bValue) {
+						System.out.println(tuples[j]);
+					}
+				}
+			}
+		}
+
 	}
 
 	private static void hashAndWriteBackToDisk(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory,
@@ -87,6 +110,9 @@ public class PartBMainClass {
 					}
 			
 		}
+		virtualDisk.writeRelationIntoDisk(newBlock, relationR + " " + relationS);
+		
+		
 		
 	}
 
@@ -196,7 +222,8 @@ public class PartBMainClass {
 			for (int j = 0; j < blockSize; j++) {
 
 				int bValue = bPresentValues[rn.nextInt(bValueSet.size())];
-
+				
+				testValues.add(bValue);
 				String aValue = "Person " + rn.nextInt(10000);
 
 				TupleR newTuple = new TupleR(bValue, aValue);
@@ -207,7 +234,7 @@ public class PartBMainClass {
 			virtualDisk.writeRelationIntoDisk(block, "R1");
 
 		}
-
+		
 		// relation R2 => duplicates are allowed and b values need not be present in
 		// relation S
 

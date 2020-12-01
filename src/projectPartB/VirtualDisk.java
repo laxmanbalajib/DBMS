@@ -16,6 +16,9 @@ public class VirtualDisk {
 		this.hashedStorage = new HashMap<>();
 	}
 	
+	public List<Block> getAllBlocks(String relation) {
+		return storage.get(relation);
+	}
 	public void writeRelationIntoDisk (Block block, String relation) {
 		
 		if (!storage.containsKey(relation)) {
