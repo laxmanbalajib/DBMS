@@ -19,6 +19,7 @@ public class TupleS extends Tuple{
 	public void setbValue(int bValue) {
 		this.bValue = bValue;
 	}
+	
 	@Override
 	public int getcValue() {
 		return cValue;
@@ -27,4 +28,11 @@ public class TupleS extends Tuple{
 	public void setcValue(int cValue) {
 		this.cValue = cValue;
 	}
+
+	@Override
+	public String toString() {
+		return "[bValue=" + bValue + ", cValue=" + cValue + "]";
+	}
+	
+	
 }
