@@ -51,4 +51,8 @@ public class VirtualMainMemory{
 	public Block getBlock(int index) {
 		return this.blocks[index];
 	}
+	
+	public void resetBlock(int index) {
+		this.blocks[index] = new Block();
+	}
 }

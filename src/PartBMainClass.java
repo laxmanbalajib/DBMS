@@ -35,7 +35,7 @@ public class PartBMainClass {
 		}
 
 		System.out.println("Test 2 ");
-		
+
 		blocks = virtualDisk.getAllBlocks("R2 S");
 
 		for (Block block : blocks) {
@@ -65,6 +65,7 @@ public class PartBMainClass {
 		for (int i = 0; i < Math.ceil((double) tupleSize / blockSize); i++) {
 			diskReadForHashing(virtualDisk, virtualMainMemory, relationName, i);
 			Block mainMemoryBlock = virtualMainMemory.getBlock(0);
+			System.out.println(mainMemoryBlock);
 			Tuple[] tuples = mainMemoryBlock.getAllTuples();
 			for (int j = 0; j < tuples.length; j++) {
 				int hashValue = 1 + ("" + tuples[j].getbValue()).hashCode() % 14;
@@ -72,15 +73,17 @@ public class PartBMainClass {
 					virtualMainMemory.getBlock(hashValue).insertTuple(tuples[j]);
 				} else {
 					virtualDisk.writeBlockToBucket(relationName, hashValue, virtualMainMemory.getBlock(hashValue));
+					virtualMainMemory.resetBlock(hashValue);
 				}
 			}
 		}
-
+		
+		/*
 		// after all values have been hashed write to disk
 		for (int i = 1; i < 15; i++) {
 			virtualDisk.writeBlockToBucket(relationName, i, virtualMainMemory.getBlock(i));
 		}
-
+		*/
 		// clean virtual main memory
 		virtualMainMemory.clearMainMemory();
 	}
@@ -92,36 +95,40 @@ public class PartBMainClass {
 		// buckets are numbered from 1 to 14
 		for (int i = 1; i < 15; i++) {
 
-			Block S = virtualDisk.readBlockFromBucket(relationS, i);
-			if (S == null)
-				continue;
+			while (true) {
 
-			virtualMainMemory.writeBlockIntoMainMemory(S, 14);
+				Block S = virtualDisk.readBlockFromBucket(relationS, i);
+				if (S == null)
+					break;
 
-			Tuple[] tupleS = virtualMainMemory.getBlock(14).getAllTuples();
+				virtualMainMemory.writeBlockIntoMainMemory(S, 14);
 
-			for (int j = 0; j < 13; j++) {
-				Block R = virtualMainMemory.getBlock(j);
+				Tuple[] tupleS = virtualMainMemory.getBlock(14).getAllTuples();
+				
+				for (int j = 0; j < 13; j++) {
+					Block R = virtualMainMemory.getBlock(j);
+					
 
-				if (R == null)
-					continue;
+					if (R == null)
+						continue;
 
-				Tuple[] tupleR = R.getAllTuples();
+					Tuple[] tupleR = R.getAllTuples();
 
-				for (int k = 0; k < tupleS.length; k++) {
-					if (tupleS[k] == null)
-						break;
-
-					for (int l = 0; l < tupleR.length; l++) {
-						if (tupleR[l] == null)
+					for (int k = 0; k < tupleS.length; k++) {
+						if (tupleS[k] == null)
 							break;
-						if (tupleS[k].getbValue() == tupleR[l].getbValue()) {
-			
-							newBlock.insertTuple(new RJoinS(tupleR[l], tupleS[k]));
 
-							if (newBlock.isFull()) {
-								virtualDisk.writeRelationIntoDisk(newBlock, relationR + " " + relationS);
-								newBlock = new Block();
+						for (int l = 0; l < tupleR.length; l++) {
+							if (tupleR[l] == null)
+								break;
+							if (tupleS[k].getbValue() == tupleR[l].getbValue()) {
+
+								newBlock.insertTuple(new RJoinS(tupleR[l], tupleS[k]));
+
+								if (newBlock.isFull()) {
+									virtualDisk.writeRelationIntoDisk(newBlock, relationR + " " + relationS);
+									newBlock.reset();
+								}
 							}
 						}
 					}
@@ -141,7 +148,9 @@ public class PartBMainClass {
 		int blockSize = 8;
 
 		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, sTupleSize, "S");
+
 		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, r1TupleSize, "R1");
+
 		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, r2TupleSize, "R2");
 
 		// buckets are numbered from 1 to 14
@@ -152,7 +161,7 @@ public class PartBMainClass {
 
 				Block R1 = virtualDisk.readBlockFromBucket("R1", i);
 				if (R1 == null)
-					continue;
+					break;
 				virtualMainMemory.readBlockIntoMainMemory(R1);
 
 			}
@@ -161,6 +170,7 @@ public class PartBMainClass {
 		}
 
 		// buckets are numbered from 1 to 14
+	
 		for (int i = 1; i < 15; i++) {
 			virtualMainMemory.clearMainMemory();
 			// read value which can fit in the first 14 blocks, leave one block for S
@@ -168,7 +178,7 @@ public class PartBMainClass {
 
 				Block R2 = virtualDisk.readBlockFromBucket("R2", i);
 				if (R2 == null)
-					continue;
+					break;
 				virtualMainMemory.readBlockIntoMainMemory(R2);
 
 			}
@@ -257,17 +267,19 @@ public class PartBMainClass {
 
 		rTupleSize = 15 * 8;
 
+		int[] rValueRange = new int[] { 20000, 30000 };
+
+		int rUpperBound = rValueRange[1] - rValueRange[0];
+
 		for (int i = 0; i < Math.ceil((double) rTupleSize / blockSize); i++) {
 
 			Block block = new Block();
 
 			for (int j = 0; j < blockSize; j++) {
 
-				int bValue = bValueRange[0] + rn.nextInt(bUpperBound);
+				int bValue = rValueRange[0] + rn.nextInt(rUpperBound);
 
 				String aValue = "Person2 " + rn.nextInt(1000);
-
-				bValueSet.add(bValue);
 
 				TupleR newTuple = new TupleR(bValue, aValue);
 

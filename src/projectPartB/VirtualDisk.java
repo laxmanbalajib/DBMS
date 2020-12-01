@@ -8,7 +8,7 @@ import java.util.Map;
 public class VirtualDisk {
 	
 	private Map<String, List<Block>> storage;
-	private Map<String, List<List<Block>>> hashedStorage;
+	public Map<String, List<List<Block>>> hashedStorage;
 
 	
 	public VirtualDisk() {
@@ -74,23 +74,26 @@ public class VirtualDisk {
 	public Block readBlockFromBucket(String blockType, int bucketNumber) {
 		
 		Block result;
-		
 		if (!diskHead.containsKey(blockType)) {
 			diskHead.put(blockType, 0);
+			
 		}
 		
 		List<List<Block>> buckets;
 
 		buckets = this.hashedStorage.get(blockType);
+
 		
-		
-		if (diskHead.get(blockType) >= buckets.get(bucketNumber).size() - 1) {
+		if (diskHead.get(blockType) >= buckets.get(bucketNumber).size()) {
 			diskHead.put(blockType, 0);
 			return null;
 		}
 		
 		result = buckets.get(bucketNumber).get(diskHead.get(blockType));
+		
 		diskHead.put(blockType, 1 + diskHead.get(blockType));
+		//System.out.println(blockType);
+		//System.out.println(result);
 		return result;
 	}
 }
