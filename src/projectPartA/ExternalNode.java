@@ -34,7 +34,6 @@ public class ExternalNode {
 		
 		Arrays.sort(this.externalNodeElements, new sortByKey());
 		
-		System.out.println(Arrays.toString(externalNodeElements));
 		return result;
 	}
 

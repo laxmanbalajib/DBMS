@@ -7,6 +7,7 @@ import projectPart1.Node;
 public class DenseBPlusTree {
 	private int order;
 	private Node root;
+	ExternalNode firstLeafNode;
 	
 	public DenseBPlusTree(int order) {
 		this.order = order;
@@ -15,6 +16,13 @@ public class DenseBPlusTree {
 	public void createTree(Integer[] arr) {
 		Arrays.sort(arr, (a,b) -> (b - a));
 		
+		buildLeafNodes(arr);
+		densify();
+		
+		
+	}
+	
+	private void buildLeafNodes(Integer[] arr) {
 		ExternalNode nextNode = null;
 		int i = 0;
 		while(i < arr.length) {
@@ -29,9 +37,12 @@ public class DenseBPlusTree {
 			nextNode = externalNode;
 		}
 		
-		ExternalNode firstLeaf = nextNode;
-		ExternalNode currNode = nextNode;
-		
+		this.firstLeafNode = nextNode;
+	}
+	
+	private void densify() {
+		ExternalNode nextNode = null;
+		ExternalNode currNode = this.firstLeafNode;
 		
 		while(currNode.getNextExternalNode() != null) {
 			
@@ -43,7 +54,9 @@ public class DenseBPlusTree {
 			currNode = nextNode;
 			
 		}
+	}
 	
-		System.out.println(firstLeaf);
+	public ExternalNode getFirstLeafNode() {
+		return this.firstLeafNode;
 	}
 }
