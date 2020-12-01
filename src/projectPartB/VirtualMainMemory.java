@@ -16,6 +16,10 @@ public class VirtualMainMemory{
 		this.insertIndex++;
 	}
 	
+	public void writeBlockIntoMainMemory(Block block, int index) {
+		this.blocks[index] = block;
+	}
+	
 	public void clearMainMemory() {
 		this.blocks = new Block[15];
 		this.insertIndex = 0;
@@ -42,5 +46,9 @@ public class VirtualMainMemory{
 
 	public Block[] getBlocks() {
 		return this.blocks;
+	}
+
+	public Block getBlock(int index) {
+		return this.blocks[index];
 	}
 }

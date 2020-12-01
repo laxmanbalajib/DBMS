@@ -8,10 +8,12 @@ import java.util.Map;
 public class VirtualDisk {
 	
 	private Map<String, List<Block>> storage;
+	private Map<String, List<List<Block>>> hashedStorage;
 	private int currDiskHead;
 	
 	public VirtualDisk() {
 		this.storage = new HashMap<>();
+		this.hashedStorage = new HashMap<>();
 		this.currDiskHead = 0;
 	}
 	
@@ -36,13 +38,32 @@ public class VirtualDisk {
 		
 		return result;
 	}
+
+
 	@Override
 	public String toString() {
-		return "VirtualDisk \n" + storage;
+		return "VirtualDisk \n" + storage +"\n"+ hashedStorage;
 	}
 
 	public Block getBlock(String blockType, int index) {
 		List<Block> diskBlocks = storage.get(blockType);
 		return diskBlocks.get(index);
+	}
+	
+	public void writeBlockToBucket(String blockType, int bucketNumber, Block block) {
+		List<List<Block>> buckets;
+		
+		if (!this.hashedStorage.containsKey(blockType)) {
+		    buckets = new ArrayList<List<Block>>();
+			for (int i = 0; i < 15; i++) {
+				buckets.add(new ArrayList<Block>());
+			}
+			
+			this.hashedStorage.put(blockType, buckets);
+		}
+		
+		buckets = this.hashedStorage.get(blockType);
+		
+		buckets.get(bucketNumber).add(block);
 	}
 }

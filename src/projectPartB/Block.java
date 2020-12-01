@@ -29,4 +29,17 @@ public class Block {
 	public Tuple getTuple(int key) {
 		return tuples[key];
 	}
+	
+	public Tuple[] getAllTuples() {
+		return this.tuples;
+	}
+	
+	public boolean isFull() {
+		return this.insertIndex == 8;
+	}
+	
+	public void reset() {
+		this.tuples = new Tuple[8];
+		this.insertIndex = 0;
+	}
 }
