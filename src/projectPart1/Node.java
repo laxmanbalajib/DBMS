@@ -1,5 +1,7 @@
 package projectPart1;
 
+import projectPartA.ExternalNode;
+
 public class Node {
 
 	public NodeElement[] getNodeElements() {
@@ -57,6 +59,11 @@ public class Node {
 	}
 
 	public void delete(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void insert(Integer key, ExternalNode currNode) {
 		// TODO Auto-generated method stub
 		
 	}

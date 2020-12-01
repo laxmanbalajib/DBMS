@@ -3,36 +3,37 @@ package projectPartA;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class ExternalNode {
+public class ExternalNode extends Node{
 	private int order;
 	private int insertIndex;
 	private ExternalNode nextExternalNode;
-	private Integer[] externalNodeElements;
+	private Integer[] keys;
+	private InternalNode parent;
 
 	public ExternalNode(int order) {
 		super();
 		this.order = order;
 		this.insertIndex = 0;
 
-		this.externalNodeElements = new Integer[this.order + 1];
+		this.keys = new Integer[this.order + 1];
 	}
 
 	public void insert(int key) {
-		this.externalNodeElements[this.insertIndex] = key;
+		this.keys[this.insertIndex] = key;
 
-		Arrays.sort(this.externalNodeElements, new sortByKey());
+		Arrays.sort(this.keys, new sortByKey());
 		
 		this.insertIndex++;
 		
 	}
 	
 	public int lend() {
-		int result = this.externalNodeElements[0];
+		int result = this.keys[0];
 		
-		this.externalNodeElements[0] = null;
+		this.keys[0] = null;
 		this.insertIndex--;
 		
-		Arrays.sort(this.externalNodeElements, new sortByKey());
+		Arrays.sort(this.keys, new sortByKey());
 		
 		return result;
 	}
@@ -61,18 +62,49 @@ public class ExternalNode {
 	public void setNextExternalNode(ExternalNode nextExternalNode) {
 		this.nextExternalNode = nextExternalNode;
 	}
-
-	public Integer[] getExternalNodeElements() {
-		return externalNodeElements;
+	
+	@Override
+	public Integer[] getKeys() {
+		return keys;
 	}
 
-	public void setExternalNodeElements(Integer[] externalNodeElements) {
-		this.externalNodeElements = externalNodeElements;
+	public void setKeys(Integer[] keys) {
+		this.keys = keys;
+	}
+	
+	public InternalNode getParent() {
+		return parent;
+	}
+
+	@Override
+	public void setParent(InternalNode parent) {
+		this.parent = parent;
+	}
+	
+	@Override
+	public boolean isLeafNode() {
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "ExternalNode [" + Arrays.toString(externalNodeElements) + "]" + " next -> " + this.nextExternalNode;
+		
+		String result = "ExternalNode [";
+		
+		for (int i =0; i < this.order; i++) {
+			result += keys[i];
+			if (i != this.order - 1) result += ", ";
+		}
+		
+		result += "]";
+		
+		return result;
+		//return "ExternalNode [" + Arrays.toString(keys) + "]" +"Parent -> "+ this.parent + " next -> " + this.nextExternalNode ; 
+	}
+
+	public void setParent(Node internalNode) {
+		this.parent = parent;
+		
 	}
 
 }

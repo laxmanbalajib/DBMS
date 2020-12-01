@@ -1,12 +1,12 @@
 package projectPartA;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-
-import projectPart1.Node;
+import java.util.List;
 
 public class DenseBPlusTree {
 	private int order;
-	private Node root;
+	private InternalNode root;
 	ExternalNode firstLeafNode;
 	
 	public DenseBPlusTree(int order) {
@@ -19,15 +19,77 @@ public class DenseBPlusTree {
 		buildLeafNodes(arr);
 		densify();
 		
+		buildInternalNodes();
+	}
+	
+	private void buildInternalNodes() {
+		ExternalNode nextNode = null;
+		ExternalNode currNode = this.firstLeafNode;
 		
+		List<InternalNode> internalNodes = new ArrayList<>();
+		
+		int i = 0;
+		InternalNode internalNode = null;
+		
+		while(currNode != null) {
+			internalNode = new InternalNode(this.order, currNode);
+			
+			internalNodes.add(internalNode);
+			i++;
+			
+			for (int j = 0; j < this.order && currNode != null; j++) {
+
+				internalNode.insert(currNode.getKeys()[0], currNode);
+				
+				currNode.setParent(internalNode);
+				
+				currNode = currNode.getNextExternalNode();
+				
+			}
+		}
+		
+		if ( i == 1) root = internalNode;
+		
+		if (i != 1) buildInternalNodes(internalNodes);
+	}
+	
+	private void buildInternalNodes(List<InternalNode> internalNodes) {
+		List<InternalNode> newInternalNodes = new ArrayList<>();
+		
+		InternalNode internalNode = null;
+		
+		int i = 0;
+		while(i < internalNodes.size()) {
+			internalNode = new InternalNode(this.order, internalNodes.get(i));
+			internalNodes.get(i).setParent(internalNode);
+			newInternalNodes.add(internalNode);
+			
+			i++;
+			for (int j = 0; j < this.order && i < internalNodes.size(); j++) {
+				
+				Node currNode = (Node) internalNodes.get(i);
+				
+				while(!currNode.isLeafNode()) {
+					currNode = currNode.getChildren()[0];
+				}
+				
+				internalNode.insert(currNode.getKeys()[0], currNode);
+				
+				internalNodes.get(i).setParent(internalNode);
+				i++;
+			}
+			
+		}
+		
+		if (newInternalNodes.size() == 1) this.root = internalNode;
 	}
 	
 	private void buildLeafNodes(Integer[] arr) {
 		ExternalNode nextNode = null;
+		
 		int i = 0;
 		while(i < arr.length) {
 			ExternalNode externalNode = new ExternalNode(this.order);
-			
 			
 			for (int j = 0; j < this.order && i < arr.length; j++) {
 				externalNode.insert(arr[i]);
@@ -58,5 +120,9 @@ public class DenseBPlusTree {
 	
 	public ExternalNode getFirstLeafNode() {
 		return this.firstLeafNode;
+	}
+	
+	public InternalNode getRoot() {
+		return this.root;
 	}
 }
