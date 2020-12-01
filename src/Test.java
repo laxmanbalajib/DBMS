@@ -5,7 +5,7 @@ public class Test {
 	public static void main(String args[]) {
 		
 		
-		Integer[] arr = new Integer[] {1,2,3,4,5,6,7,8,9,10,123,14,45,65,34,345,4365,2134};
+		Integer[] arr = new Integer[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
 		
 		DenseBPlusTree denseTree  = new DenseBPlusTree(4);
 		
@@ -32,12 +32,13 @@ public class Test {
 				
 				System.out.println(curr);
 				
+				if (curr == null) continue;
 				if (curr.isLeafNode()) continue;
 				
 				Node[] children = curr.getChildren();
 				
 				for (int j = 0; j < children.length; j++) {
-					if (children[j] == null) continue;
+					if (j == children.length - 1) continue;
 					queue.add(children[j]);
 				}
 			}

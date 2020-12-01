@@ -35,6 +35,8 @@ public class DenseBPlusTree {
 			internalNode = new InternalNode(this.order, currNode);
 			
 			internalNodes.add(internalNode);
+			
+			currNode = currNode.getNextExternalNode();
 			i++;
 			
 			for (int j = 0; j < this.order && currNode != null; j++) {
@@ -46,6 +48,8 @@ public class DenseBPlusTree {
 				currNode = currNode.getNextExternalNode();
 				
 			}
+			
+			
 		}
 		
 		if ( i == 1) root = internalNode;
@@ -63,6 +67,7 @@ public class DenseBPlusTree {
 			internalNode = new InternalNode(this.order, internalNodes.get(i));
 			internalNodes.get(i).setParent(internalNode);
 			newInternalNodes.add(internalNode);
+			System.out.println(internalNode.getChildren()[0]);
 			
 			i++;
 			for (int j = 0; j < this.order && i < internalNodes.size(); j++) {
@@ -73,12 +78,12 @@ public class DenseBPlusTree {
 					currNode = currNode.getChildren()[0];
 				}
 				
-				internalNode.insert(currNode.getKeys()[0], currNode);
+				
+				internalNode.insert(currNode.getKeys()[0], internalNodes.get(i));
 				
 				internalNodes.get(i).setParent(internalNode);
 				i++;
 			}
-			
 		}
 		
 		if (newInternalNodes.size() == 1) this.root = internalNode;

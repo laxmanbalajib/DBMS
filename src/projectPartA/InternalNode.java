@@ -26,7 +26,7 @@ public class InternalNode extends Node{
 	public void insert(int key, Node child) {
 		
 		this.keys[this.insertIndex] = key;
-		this.children[this.insertIndex] = child;
+		this.children[this.insertIndex + 1] = child;
 
 		Arrays.sort(this.keys, new sortByKey());
 		Arrays.sort(this.children, new sortByFirstKey());
@@ -56,6 +56,11 @@ public class InternalNode extends Node{
 		
 		return result;
 	}*/
+	
+	@Override
+	public Integer[] getKeys() {
+		return this.keys;
+	}
 
 	class sortByKey implements Comparator<Integer>{
 		public int compare(Integer a, Integer b) {
