@@ -1,16 +1,16 @@
 package projectPartB;
 
-public class TupleR extends Tuple{
-	
+public class TupleR extends Tuple {
+
 	private int bValue;
 	private String aValue;
-	
-	public TupleR(int bValue,String aValue) {
+
+	public TupleR(int bValue, String aValue) {
 		super();
 		this.bValue = bValue;
 		this.aValue = aValue;
 	}
-	
+
 	@Override
 	public int getbValue() {
 		return bValue;
@@ -27,5 +27,10 @@ public class TupleR extends Tuple{
 
 	public void setaValue(String aValue) {
 		this.aValue = aValue;
+	}
+
+	@Override
+	public String toString() {
+		return "[bValue=" + bValue + ", aValue=" + aValue + "]";
 	}
 }
