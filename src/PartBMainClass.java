@@ -16,10 +16,6 @@ public class PartBMainClass {
 
 		//System.out.println(virtualDisk);
 		//System.out.println(virtualMainMemory);
-		
-		System.out.println(virtualDisk.readBlockFromBucket("R1", 0));
-		System.out.println("");
-		System.out.println(virtualDisk.readBlockFromBucket("S", 0));
 	}
 
 	private static void hashJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory) {
@@ -114,6 +110,28 @@ public class PartBMainClass {
 		virtualMainMemory.clearMainMemory();
 		
 		
+		List<Block> sHashedBlock = virtualDisk.readBlockFromBucket("S", 1);
+		List<Block> r1HashedBlock = virtualDisk.readBlockFromBucket("R1", 1);
+		System.out.println(sHashedBlock.size());
+		for (int i = 0; i < sHashedBlock.size(); i++) {
+			Block S = sHashedBlock.get(i);
+			for (int j = 0; j < r1HashedBlock.size(); j++) {
+				Block R = r1HashedBlock.get(j);
+				
+				Tuple[] tupleS = S.getAllTuples();
+				Tuple[] tupleR1 = R.getAllTuples();
+				
+				for (int k = 0; k < tupleS.length; k++) {
+					if (tupleS[k] == null) break;
+					for (int l = 0; l < tupleR1.length; l++) {
+						if (tupleR1[l] == null) break;
+						if (tupleS[k].getbValue() == tupleR1[l].getbValue()) {
+							System.out.println(new RJoinS(tupleR1[l], tupleS[k]));
+						}
+					}
+				}
+			}
+		}
 		
 	}
 
