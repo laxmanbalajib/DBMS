@@ -9,12 +9,11 @@ public class VirtualDisk {
 	
 	private Map<String, List<Block>> storage;
 	private Map<String, List<List<Block>>> hashedStorage;
-	private int currDiskHead;
+
 	
 	public VirtualDisk() {
 		this.storage = new HashMap<>();
 		this.hashedStorage = new HashMap<>();
-		this.currDiskHead = 0;
 	}
 	
 	public void writeRelationIntoDisk (Block block, String relation) {
@@ -67,11 +66,28 @@ public class VirtualDisk {
 		buckets.get(bucketNumber).add(block);
 	}
 	
-	public List<Block> readBlockFromBucket(String blockType, int bucketNumber) {
+	private Map<String, Integer> diskHead = new HashMap<>();
+	
+	public Block readBlockFromBucket(String blockType, int bucketNumber) {
+		
+		Block result;
+		
+		if (!diskHead.containsKey(blockType)) {
+			diskHead.put(blockType, 0);
+		}
+		
 		List<List<Block>> buckets;
 
 		buckets = this.hashedStorage.get(blockType);
-		System.out.println(this.hashedStorage.get(blockType));
-		return buckets.get(bucketNumber);
+		
+		
+		if (diskHead.get(blockType) >= buckets.get(bucketNumber).size() - 1) {
+			diskHead.put(blockType, 0);
+			return null;
+		}
+		
+		result = buckets.get(bucketNumber).get(diskHead.get(blockType));
+		diskHead.put(blockType, 1 + diskHead.get(blockType));
+		return result;
 	}
 }

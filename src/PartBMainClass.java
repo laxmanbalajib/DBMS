@@ -10,23 +10,21 @@ public class PartBMainClass {
 		initialVirtualDisk(virtualDisk);
 
 		hashJoin(virtualDisk, virtualMainMemory);
-
-		//System.out.println(virtualDisk);
-		//System.out.println(virtualMainMemory);
 	}
-	
-	private static void hashAndWriteBackToDisk(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory, int tupleSize, String relationName) {
+
+	private static void hashAndWriteBackToDisk(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory,
+			int tupleSize, String relationName) {
 		int blockSize = 8;
-		
-		//sets up initial buckets in the main memory
+
+		// sets up initial buckets in the main memory
 		for (int i = 1; i < 15; i++) {
 			virtualMainMemory.writeBlockIntoMainMemory(new Block(), i);
 		}
-		
+
 		for (int i = 0; i < Math.ceil((double) tupleSize / blockSize); i++) {
-			diskReadForHashing(virtualDisk, virtualMainMemory, "S", i);
+			diskReadForHashing(virtualDisk, virtualMainMemory, relationName, i);
 			Block mainMemoryBlock = virtualMainMemory.getBlock(0);
-			Tuple[] tuples  = mainMemoryBlock.getAllTuples();
+			Tuple[] tuples = mainMemoryBlock.getAllTuples();
 			for (int j = 0; j < tuples.length; j++) {
 				int hashValue = 1 + ("" + tuples[j].getbValue()).hashCode() % 14;
 				if (!virtualMainMemory.getBlock(hashValue).isFull()) {
@@ -37,55 +35,105 @@ public class PartBMainClass {
 			}
 		}
 
-		//after all values have been hashed write to disk
+		// after all values have been hashed write to disk
 		for (int i = 1; i < 15; i++) {
 			virtualDisk.writeBlockToBucket(relationName, i, virtualMainMemory.getBlock(i));
 		}
-		
-		//clean virtual main memory
+
+		// clean virtual main memory
 		virtualMainMemory.clearMainMemory();
 	}
 
-	private static void hashJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory) {
+	
+	private static void naturalJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory, String relationS, String relationR) {
+		Block newBlock = new Block();
 		
+		// buckets are numbered from 1 to 14
+		for (int i = 1; i < 15; i++) {
+
+			
+					Block S = virtualDisk.readBlockFromBucket(relationS, i);
+					if (S == null) continue;
+					
+					virtualMainMemory.writeBlockIntoMainMemory(S, 14);
+					
+					Tuple[] tupleS = virtualMainMemory.getBlock(14).getAllTuples();
+					
+					
+					for (int j = 0; j < 13; j++) {
+						Block R = virtualMainMemory.getBlock(j);
+						
+						if (R == null) continue;
+						
+						Tuple[] tupleR = R.getAllTuples();
+						
+						for (int k = 0; k < tupleS.length; k++) {
+							if (tupleS[k] == null)
+								break;
+							
+							for (int l = 0; l < tupleR.length; l++) {
+								if (tupleR[l] == null)
+									break;
+								if (tupleS[k].getbValue() == tupleR[l].getbValue()) {
+									newBlock.insertTuple(new RJoinS(tupleR[l], tupleS[k]));
+									
+									if (newBlock.isFull()) {
+										virtualDisk.writeRelationIntoDisk(newBlock, relationR + " " + relationS);
+										newBlock = new Block();
+									}
+								}
+							}
+						}
+					}
+			
+		}
+		
+	}
+
+	private static void hashJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory) {
+
 		int sTupleSize = 15 * 8;
 		int r1TupleSize = 15 * 8;
 		int r2TupleSize = 15 * 8;
 		int blockSize = 8;
-		
+
 		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, sTupleSize, "S");
 		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, r1TupleSize, "R1");
 		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, r2TupleSize, "R2");
 
 		
-		
-		List<Block> sHashedBlock = virtualDisk.readBlockFromBucket("S", 1);
-		List<Block> r1HashedBlock = virtualDisk.readBlockFromBucket("R1", 1);
-		
-		for (int i = 0; i < sHashedBlock.size(); i++) {
-			Block S = sHashedBlock.get(i);
-			for (int j = 0; j < r1HashedBlock.size(); j++) {
-				Block R = r1HashedBlock.get(j);
+		// buckets are numbered from 1 to 14
+		for (int i = 1; i < 15; i++) {
+			virtualMainMemory.clearMainMemory();
+			//read value which can fit in the first 14 blocks, leave one block for S
+			for (int j = 0; j < 14; j++) {
 				
-				Tuple[] tupleS = S.getAllTuples();
-				Tuple[] tupleR1 = R.getAllTuples();
-				
-				for (int k = 0; k < tupleS.length; k++) {
-					if (tupleS[k] == null) break;
-					for (int l = 0; l < tupleR1.length; l++) {
-						if (tupleR1[l] == null) break;
-						if (tupleS[k].getbValue() == tupleR1[l].getbValue()) {
-							System.out.println(new RJoinS(tupleR1[l], tupleS[k]));
-						}
-					}
-				}
+					Block R1 = virtualDisk.readBlockFromBucket("R1", i);
+					if (R1 == null) continue;
+					virtualMainMemory.readBlockIntoMainMemory(R1);
+					
 			}
+			naturalJoin(virtualDisk, virtualMainMemory, "S", "R1");
+
 		}
 		
+		// buckets are numbered from 1 to 14
+		for (int i = 1; i < 15; i++) {
+			virtualMainMemory.clearMainMemory();
+			//read value which can fit in the first 14 blocks, leave one block for S
+			for (int j = 0; j < 14; j++) {
+				
+					Block R2 = virtualDisk.readBlockFromBucket("R2", i);
+					if (R2 == null) continue;
+					virtualMainMemory.readBlockIntoMainMemory(R2);
+					
+			}
+			naturalJoin(virtualDisk, virtualMainMemory, "S", "R2");
+
+		}
 	}
 
-	
-	///always reads into the first memory block of main memory
+	// always reads into the first memory block of main memory
 	private static void diskReadForHashing(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory,
 			String readType, int index) {
 		Block diskBlock;
@@ -93,16 +141,6 @@ public class PartBMainClass {
 		diskBlock = virtualDisk.getBlock(readType, index);
 		virtualMainMemory.writeBlockIntoMainMemory(diskBlock, 0);
 
-	}
-
-	private static void diskRead(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory, String readType,
-			int index, int numOfBlocks) {
-		Block diskBlock;
-
-		for (int i = 0; i < numOfBlocks; i++) {
-			diskBlock = virtualDisk.getBlock(readType, index + i);
-			virtualMainMemory.readBlockIntoMainMemory(diskBlock);
-		}
 	}
 
 	private static void initialVirtualDisk(VirtualDisk virtualDisk) {
@@ -143,12 +181,13 @@ public class PartBMainClass {
 			virtualDisk.writeRelationIntoDisk(block, "S");
 
 		}
-		
-		// relation R1 => duplicates are allowed and b values must be present in relation S
+
+		// relation R1 => duplicates are allowed and b values must be present in
+		// relation S
 		int rTupleSize = 15 * 8;
-		
+
 		Integer[] bPresentValues = new Integer[bValueSet.size()];
-		bPresentValues  = bValueSet.toArray(bPresentValues);
+		bPresentValues = bValueSet.toArray(bPresentValues);
 
 		for (int i = 0; i < Math.ceil((double) rTupleSize / blockSize); i++) {
 
@@ -156,9 +195,9 @@ public class PartBMainClass {
 
 			for (int j = 0; j < blockSize; j++) {
 
-				int bValue =  bPresentValues[rn.nextInt(bValueSet.size())];
+				int bValue = bPresentValues[rn.nextInt(bValueSet.size())];
 
-				String aValue = "Person " + rn.nextInt();
+				String aValue = "Person " + rn.nextInt(10000);
 
 				TupleR newTuple = new TupleR(bValue, aValue);
 
@@ -168,10 +207,10 @@ public class PartBMainClass {
 			virtualDisk.writeRelationIntoDisk(block, "R1");
 
 		}
-		
-		
-		// relation R2 => duplicates are allowed and b values need not be present in relation S
-		
+
+		// relation R2 => duplicates are allowed and b values need not be present in
+		// relation S
+
 		rTupleSize = 15 * 8;
 
 		for (int i = 0; i < Math.ceil((double) rTupleSize / blockSize); i++) {
@@ -182,7 +221,7 @@ public class PartBMainClass {
 
 				int bValue = bValueRange[0] + rn.nextInt(bUpperBound);
 
-				String aValue = "Person " + rn.nextInt();
+				String aValue = "Person " + rn.nextInt(1000);
 
 				bValueSet.add(bValue);
 
