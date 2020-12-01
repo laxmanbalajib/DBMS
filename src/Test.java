@@ -8,12 +8,55 @@ public class Test {
 		Integer[] arr = new Integer[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
 		
 		DenseBPlusTree denseTree  = new DenseBPlusTree(4);
+	
 		
 		denseTree.createTree(arr);
 		
 		//System.out.println(denseTree.getFirstLeafNode());
 		
+		
 		printTree(denseTree);
+		
+		
+		SparseBPlusTree sparseTree = new SparseBPlusTree(4);
+		
+		sparseTree.createTree(arr);
+		
+		printTree(sparseTree);
+	}
+	
+	private static void printTree(SparseBPlusTree sparseTree) {
+		
+		InternalNode root = sparseTree.getRoot();
+		
+		Queue<Node> queue = new LinkedList<>();
+		
+		queue.add(root);
+		
+		int level = 0;
+		
+		while(!queue.isEmpty()) {
+			int size = queue.size();
+			
+			System.out.println("\nNodes at level " + level);
+			level++;
+			
+			for (int i = 0; i < size; i++) {
+				Node curr = queue.remove();
+				
+				System.out.println(curr);
+				
+				if (curr == null) continue;
+				if (curr.isLeafNode()) continue;
+				
+				Node[] children = curr.getChildren();
+				
+				for (int j = 0; j < children.length; j++) {
+					if (j == children.length - 1) continue;
+					queue.add(children[j]);
+				}
+			}
+		}
 	}
 	
 	private static void printTree(DenseBPlusTree denseTree) {
