@@ -2,9 +2,9 @@ import java.util.*;
 import projectPartB.*;
 
 public class PartBMainClass {
-	
+
 	public static List<Integer> testValues = new ArrayList<>();
-	
+
 	public static void main(String[] args) {
 		VirtualDisk virtualDisk = new VirtualDisk();
 
@@ -13,24 +13,42 @@ public class PartBMainClass {
 		initialVirtualDisk(virtualDisk);
 
 		hashJoin(virtualDisk, virtualMainMemory);
-		
+
 		List<Block> blocks = virtualDisk.getAllBlocks("R1 S");
-		
-		for (int i = 0; i < testValues.size(); i++) {
+
+		for (int i = 0; i < 20; i++) {
 			int bValue = testValues.get(i);
-			
+
 			System.out.println("For a B value of " + bValue);
-			for(Block block: blocks) {
+			for (Block block : blocks) {
 				Tuple[] tuples = block.getAllTuples();
-				
+
 				for (int j = 0; j < tuples.length; j++) {
-					if (tuples[j] == null) continue;
+					if (tuples[j] == null)
+						continue;
 
 					if (tuples[j].getbValue() == bValue) {
 						System.out.println(tuples[j]);
 					}
 				}
 			}
+		}
+
+		System.out.println("Test 2 ");
+		
+		blocks = virtualDisk.getAllBlocks("R2 S");
+
+		for (Block block : blocks) {
+			Tuple[] tuples = block.getAllTuples();
+
+			for (int j = 0; j < tuples.length; j++) {
+				if (tuples[j] == null)
+					continue;
+
+				System.out.println(tuples[j]);
+
+			}
+
 		}
 
 	}
@@ -67,53 +85,52 @@ public class PartBMainClass {
 		virtualMainMemory.clearMainMemory();
 	}
 
-	
-	private static void naturalJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory, String relationS, String relationR) {
+	private static void naturalJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory, String relationS,
+			String relationR) {
 		Block newBlock = new Block();
-		
+
 		// buckets are numbered from 1 to 14
 		for (int i = 1; i < 15; i++) {
 
+			Block S = virtualDisk.readBlockFromBucket(relationS, i);
+			if (S == null)
+				continue;
+
+			virtualMainMemory.writeBlockIntoMainMemory(S, 14);
+
+			Tuple[] tupleS = virtualMainMemory.getBlock(14).getAllTuples();
+
+			for (int j = 0; j < 13; j++) {
+				Block R = virtualMainMemory.getBlock(j);
+
+				if (R == null)
+					continue;
+
+				Tuple[] tupleR = R.getAllTuples();
+
+				for (int k = 0; k < tupleS.length; k++) {
+					if (tupleS[k] == null)
+						break;
+
+					for (int l = 0; l < tupleR.length; l++) {
+						if (tupleR[l] == null)
+							break;
+						if (tupleS[k].getbValue() == tupleR[l].getbValue()) {
 			
-					Block S = virtualDisk.readBlockFromBucket(relationS, i);
-					if (S == null) continue;
-					
-					virtualMainMemory.writeBlockIntoMainMemory(S, 14);
-					
-					Tuple[] tupleS = virtualMainMemory.getBlock(14).getAllTuples();
-					
-					
-					for (int j = 0; j < 13; j++) {
-						Block R = virtualMainMemory.getBlock(j);
-						
-						if (R == null) continue;
-						
-						Tuple[] tupleR = R.getAllTuples();
-						
-						for (int k = 0; k < tupleS.length; k++) {
-							if (tupleS[k] == null)
-								break;
-							
-							for (int l = 0; l < tupleR.length; l++) {
-								if (tupleR[l] == null)
-									break;
-								if (tupleS[k].getbValue() == tupleR[l].getbValue()) {
-									newBlock.insertTuple(new RJoinS(tupleR[l], tupleS[k]));
-									
-									if (newBlock.isFull()) {
-										virtualDisk.writeRelationIntoDisk(newBlock, relationR + " " + relationS);
-										newBlock = new Block();
-									}
-								}
+							newBlock.insertTuple(new RJoinS(tupleR[l], tupleS[k]));
+
+							if (newBlock.isFull()) {
+								virtualDisk.writeRelationIntoDisk(newBlock, relationR + " " + relationS);
+								newBlock = new Block();
 							}
 						}
 					}
-			
+				}
+			}
+
 		}
 		virtualDisk.writeRelationIntoDisk(newBlock, relationR + " " + relationS);
-		
-		
-		
+
 	}
 
 	private static void hashJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory) {
@@ -127,35 +144,35 @@ public class PartBMainClass {
 		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, r1TupleSize, "R1");
 		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, r2TupleSize, "R2");
 
-		
 		// buckets are numbered from 1 to 14
 		for (int i = 1; i < 15; i++) {
 			virtualMainMemory.clearMainMemory();
-			//read value which can fit in the first 14 blocks, leave one block for S
+			// read value which can fit in the first 14 blocks, leave one block for S
 			for (int j = 0; j < 14; j++) {
-				
-					Block R1 = virtualDisk.readBlockFromBucket("R1", i);
-					if (R1 == null) continue;
-					virtualMainMemory.readBlockIntoMainMemory(R1);
-					
+
+				Block R1 = virtualDisk.readBlockFromBucket("R1", i);
+				if (R1 == null)
+					continue;
+				virtualMainMemory.readBlockIntoMainMemory(R1);
+
 			}
 			naturalJoin(virtualDisk, virtualMainMemory, "S", "R1");
 
 		}
-		
+
 		// buckets are numbered from 1 to 14
 		for (int i = 1; i < 15; i++) {
 			virtualMainMemory.clearMainMemory();
-			//read value which can fit in the first 14 blocks, leave one block for S
+			// read value which can fit in the first 14 blocks, leave one block for S
 			for (int j = 0; j < 14; j++) {
-				
-					Block R2 = virtualDisk.readBlockFromBucket("R2", i);
-					if (R2 == null) continue;
-					virtualMainMemory.readBlockIntoMainMemory(R2);
-					
+
+				Block R2 = virtualDisk.readBlockFromBucket("R2", i);
+				if (R2 == null)
+					continue;
+				virtualMainMemory.readBlockIntoMainMemory(R2);
+
 			}
 			naturalJoin(virtualDisk, virtualMainMemory, "S", "R2");
-
 		}
 	}
 
@@ -222,9 +239,9 @@ public class PartBMainClass {
 			for (int j = 0; j < blockSize; j++) {
 
 				int bValue = bPresentValues[rn.nextInt(bValueSet.size())];
-				
+
 				testValues.add(bValue);
-				String aValue = "Person " + rn.nextInt(10000);
+				String aValue = "Person1 " + rn.nextInt(10000);
 
 				TupleR newTuple = new TupleR(bValue, aValue);
 
@@ -234,7 +251,7 @@ public class PartBMainClass {
 			virtualDisk.writeRelationIntoDisk(block, "R1");
 
 		}
-		
+
 		// relation R2 => duplicates are allowed and b values need not be present in
 		// relation S
 
@@ -248,7 +265,7 @@ public class PartBMainClass {
 
 				int bValue = bValueRange[0] + rn.nextInt(bUpperBound);
 
-				String aValue = "Person " + rn.nextInt(1000);
+				String aValue = "Person2 " + rn.nextInt(1000);
 
 				bValueSet.add(bValue);
 
