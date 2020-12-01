@@ -10,8 +10,6 @@ public class Test {
 		for (int i : arr) {
 			bPlusTree.insert(i, i);
 			//System.out.println("insert "  + i);
-
-
 		}
 		
 		Node root = bPlusTree.welcome();
@@ -23,5 +21,7 @@ public class Test {
 		root = bPlusTree.welcome();
 		bPlusTree.delete(10);
 		System.out.println("\ntree\n" + root);
+		
+		
 	}
 }
