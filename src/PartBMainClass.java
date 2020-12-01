@@ -8,20 +8,14 @@ public class PartBMainClass {
 		VirtualMainMemory virtualMainMemory = new VirtualMainMemory();
 
 		initialVirtualDisk(virtualDisk);
-		//System.out.println(virtualDisk);
 
-		//System.out.println(virtualMainMemory);
-		// diskRead(virtualDisk, virtualMainMemory, "S", 0, 1);
 		hashJoin(virtualDisk, virtualMainMemory);
 
 		//System.out.println(virtualDisk);
 		//System.out.println(virtualMainMemory);
 	}
-
-	private static void hashJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory) {
-		
-		int sTupleSize = 15 * 8;
-
+	
+	private static void hashAndWriteBackToDisk(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory, int tupleSize, String relationName) {
 		int blockSize = 8;
 		
 		//sets up initial buckets in the main memory
@@ -29,7 +23,7 @@ public class PartBMainClass {
 			virtualMainMemory.writeBlockIntoMainMemory(new Block(), i);
 		}
 		
-		for (int i = 0; i < Math.ceil((double) sTupleSize / blockSize); i++) {
+		for (int i = 0; i < Math.ceil((double) tupleSize / blockSize); i++) {
 			diskReadForHashing(virtualDisk, virtualMainMemory, "S", i);
 			Block mainMemoryBlock = virtualMainMemory.getBlock(0);
 			Tuple[] tuples  = mainMemoryBlock.getAllTuples();
@@ -38,81 +32,36 @@ public class PartBMainClass {
 				if (!virtualMainMemory.getBlock(hashValue).isFull()) {
 					virtualMainMemory.getBlock(hashValue).insertTuple(tuples[j]);
 				} else {
-					virtualDisk.writeBlockToBucket("S", hashValue, virtualMainMemory.getBlock(hashValue));
+					virtualDisk.writeBlockToBucket(relationName, hashValue, virtualMainMemory.getBlock(hashValue));
 				}
 			}
 		}
 
 		//after all values have been hashed write to disk
 		for (int i = 1; i < 15; i++) {
-			virtualDisk.writeBlockToBucket("S", i, virtualMainMemory.getBlock(i));
+			virtualDisk.writeBlockToBucket(relationName, i, virtualMainMemory.getBlock(i));
 		}
 		
 		//clean virtual main memory
 		virtualMainMemory.clearMainMemory();
-		
-		int rTupleSize = 15 * 8;
-		
-		//sets up initial buckets in the main memory
-		for (int i = 1; i < 15; i++) {
-			virtualMainMemory.writeBlockIntoMainMemory(new Block(), i);
-		}
-		
-		for (int i = 0; i < Math.ceil((double) rTupleSize / blockSize); i++) {
-			diskReadForHashing(virtualDisk, virtualMainMemory, "R1", i);
-			Block mainMemoryBlock = virtualMainMemory.getBlock(0);
-			Tuple[] tuples  = mainMemoryBlock.getAllTuples();
-			for (int j = 0; j < tuples.length; j++) {
-				int hashValue = 1 + ("" + tuples[j].getbValue()).hashCode() % 14;
-				if (!virtualMainMemory.getBlock(hashValue).isFull()) {
-					virtualMainMemory.getBlock(hashValue).insertTuple(tuples[j]);
-				} else {
-					virtualDisk.writeBlockToBucket("R1", hashValue, virtualMainMemory.getBlock(hashValue));
-				}
-			}
-		}
+	}
 
-		//after all values have been hashed write to disk
-		for (int i = 1; i < 15; i++) {
-			virtualDisk.writeBlockToBucket("R1", i, virtualMainMemory.getBlock(i));
-		}
+	private static void hashJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory) {
 		
-		//clean virtual main memory
-		virtualMainMemory.clearMainMemory();
+		int sTupleSize = 15 * 8;
+		int r1TupleSize = 15 * 8;
+		int r2TupleSize = 15 * 8;
+		int blockSize = 8;
 		
-		rTupleSize = 15 * 8;
-		
-		//sets up initial buckets in the main memory
-		for (int i = 1; i < 15; i++) {
-			virtualMainMemory.writeBlockIntoMainMemory(new Block(), i);
-		}
-		
-		for (int i = 0; i < Math.ceil((double) rTupleSize / blockSize); i++) {
-			diskReadForHashing(virtualDisk, virtualMainMemory, "R2", i);
-			Block mainMemoryBlock = virtualMainMemory.getBlock(0);
-			Tuple[] tuples  = mainMemoryBlock.getAllTuples();
-			for (int j = 0; j < tuples.length; j++) {
-				int hashValue = 1 + ("" + tuples[j].getbValue()).hashCode() % 14;
-				if (!virtualMainMemory.getBlock(hashValue).isFull()) {
-					virtualMainMemory.getBlock(hashValue).insertTuple(tuples[j]);
-				} else {
-					virtualDisk.writeBlockToBucket("R2", hashValue, virtualMainMemory.getBlock(hashValue));
-				}
-			}
-		}
+		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, sTupleSize, "S");
+		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, r1TupleSize, "R1");
+		hashAndWriteBackToDisk(virtualDisk, virtualMainMemory, r2TupleSize, "R2");
 
-		//after all values have been hashed write to disk
-		for (int i = 1; i < 15; i++) {
-			virtualDisk.writeBlockToBucket("R2", i, virtualMainMemory.getBlock(i));
-		}
-		
-		//clean virtual main memory
-		virtualMainMemory.clearMainMemory();
 		
 		
 		List<Block> sHashedBlock = virtualDisk.readBlockFromBucket("S", 1);
 		List<Block> r1HashedBlock = virtualDisk.readBlockFromBucket("R1", 1);
-		System.out.println(sHashedBlock.size());
+		
 		for (int i = 0; i < sHashedBlock.size(); i++) {
 			Block S = sHashedBlock.get(i);
 			for (int j = 0; j < r1HashedBlock.size(); j++) {
