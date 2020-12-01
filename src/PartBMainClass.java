@@ -5,9 +5,25 @@ public class PartBMainClass {
 	public static void main(String[] args) {
 		VirtualDisk virtualDisk = new VirtualDisk();
 		
+		VirtualMainMemory virtualMainMemory = new VirtualMainMemory();
+		
 		initialVirtualDisk(virtualDisk);
 		System.out.println(virtualDisk);
 		
+		diskRead(virtualDisk, virtualMainMemory, "S", 0, 1);
+		
+		System.out.println(virtualMainMemory);
+		
+	}
+	
+	private static void diskRead(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory,
+			              String readType, int index, int numOfBlocks) {
+		
+		Block[] diskBlocks = virtualDisk.getBlocks(readType, index, numOfBlocks);
+		
+		for (int i = 0; i < diskBlocks.length; i++) {
+			virtualMainMemory.readBlockIntoMainMemory(diskBlocks[i]);
+		}
 	}
 	
 	private static void initialVirtualDisk(VirtualDisk virtualDisk) {

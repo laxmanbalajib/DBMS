@@ -1,5 +1,7 @@
 package projectPartB;
 
+import java.util.Arrays;
+
 public class VirtualMainMemory{
 	private Block[] blocks;
 	private int insertIndex;
@@ -33,6 +35,11 @@ public class VirtualMainMemory{
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return "VirtualMainMemory [" + Arrays.toString(blocks)+ "]";
+	}
+
 	public Block[] getBlocks() {
 		return this.blocks;
 	}
