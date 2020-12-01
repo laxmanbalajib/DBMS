@@ -1,12 +1,17 @@
 import java.util.*;
-import projectPart1.*;
+import projectPartA.*;
 
 public class Test {
 	public static void main(String args[]) {
-		BPLusTree bPlusTree = new BPLusTree(2);
 		
-		int[] arr = new int[] {1,2,3,7,8,4,5,6,9,10};
 		
+		Integer[] arr = new Integer[] {1,2,3,7,8,4,5,6};
+		
+		DenseBPlusTree denseTree  = new DenseBPlusTree(3);
+		
+		denseTree.createTree(arr);
+		
+		/*
 		for (int i : arr) {
 			bPlusTree.insert(i, i);
 			//System.out.println("insert "  + i);
@@ -22,6 +27,6 @@ public class Test {
 		bPlusTree.delete(10);
 		System.out.println("\ntree\n" + root);
 		
-		
+		*/
 	}
 }

@@ -1,13 +1,14 @@
-package projectPart1;
+package projectPartA;
 
 import java.util.Arrays;
 
-public class DenseBPlusTree extends BPLusTree{
+import projectPart1.Node;
+
+public class DenseBPlusTree {
 	private int order;
 	private Node root;
 	
 	public DenseBPlusTree(int order) {
-		super(order);
 		this.order = order;
 	}
 	
@@ -21,26 +22,28 @@ public class DenseBPlusTree extends BPLusTree{
 			
 			
 			for (int j = 0; j < this.order && i < arr.length; j++) {
-				externalNode.insert(arr[i],arr[i]);
+				externalNode.insert(arr[i]);
 				i+=1;
 			}
 			externalNode.setNextExternalNode(nextNode);
 			nextNode = externalNode;
 		}
 		
+		ExternalNode firstLeaf = nextNode;
 		ExternalNode currNode = nextNode;
+		
 		
 		while(currNode.getNextExternalNode() != null) {
 			
 			nextNode = currNode.getNextExternalNode();
 			while (!currNode.isHalfFull()) {
-				int key = nextNode.borrow();
-				currNode.insert(key, key);
+				int key = nextNode.lend();
+				currNode.insert(key);
 			}
 			currNode = nextNode;
 			
 		}
-		
-		System.out.println(nextNode);
+	
+		System.out.println(firstLeaf);
 	}
 }

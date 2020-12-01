@@ -59,6 +59,17 @@ public class ExternalNode extends Node{
 		this.insertIndex++;
 	}
 	
+
+	public int borrow(){
+		System.out.println(externalNodeElements[0].getKey());
+		int result = externalNodeElements[0].getKey();
+		externalNodeElements[0] = null;
+		Arrays.sort(externalNodeElements, new sortByKey());
+		this.insertIndex--;
+		
+		return result;
+	}
+	
 	@Override
 	public void delete(int deleteIndex){
 		
@@ -93,8 +104,8 @@ public class ExternalNode extends Node{
 
 	@Override
 	public String toString() {
-		return "ExternalNode " + Arrays.toString(externalNodeElements);
-		//return "ExternalNode " + Arrays.toString(externalNodeElements) + "  NextNode->" + ((this.nextExternalNode != null) ? nextExternalNode.toString() : "null");
+		//return "ExternalNode " + Arrays.toString(externalNodeElements);
+		return "ExternalNode " + Arrays.toString(externalNodeElements) + "  NextNode->" + ((this.nextExternalNode != null) ? nextExternalNode.toString() : "null");
 	}
 
 	@Override
