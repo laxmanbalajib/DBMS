@@ -66,4 +66,12 @@ public class VirtualDisk {
 		
 		buckets.get(bucketNumber).add(block);
 	}
+	
+	public List<Block> readBlockFromBucket(String blockType, int bucketNumber) {
+		List<List<Block>> buckets;
+
+		buckets = this.hashedStorage.get(blockType);
+		System.out.println(this.hashedStorage.get(blockType));
+		return buckets.get(bucketNumber);
+	}
 }

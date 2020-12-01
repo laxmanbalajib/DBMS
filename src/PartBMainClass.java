@@ -8,16 +8,18 @@ public class PartBMainClass {
 		VirtualMainMemory virtualMainMemory = new VirtualMainMemory();
 
 		initialVirtualDisk(virtualDisk);
-		System.out.println(virtualDisk);
+		//System.out.println(virtualDisk);
 
-		System.out.println(virtualMainMemory);
+		//System.out.println(virtualMainMemory);
 		// diskRead(virtualDisk, virtualMainMemory, "S", 0, 1);
 		hashJoin(virtualDisk, virtualMainMemory);
 
-		System.out.println(virtualDisk);
+		//System.out.println(virtualDisk);
 		//System.out.println(virtualMainMemory);
 		
-
+		System.out.println(virtualDisk.readBlockFromBucket("R1", 0));
+		System.out.println("");
+		System.out.println(virtualDisk.readBlockFromBucket("S", 0));
 	}
 
 	private static void hashJoin(VirtualDisk virtualDisk, VirtualMainMemory virtualMainMemory) {
@@ -61,6 +63,35 @@ public class PartBMainClass {
 		}
 		
 		for (int i = 0; i < Math.ceil((double) rTupleSize / blockSize); i++) {
+			diskReadForHashing(virtualDisk, virtualMainMemory, "R1", i);
+			Block mainMemoryBlock = virtualMainMemory.getBlock(0);
+			Tuple[] tuples  = mainMemoryBlock.getAllTuples();
+			for (int j = 0; j < tuples.length; j++) {
+				int hashValue = 1 + ("" + tuples[j].getbValue()).hashCode() % 14;
+				if (!virtualMainMemory.getBlock(hashValue).isFull()) {
+					virtualMainMemory.getBlock(hashValue).insertTuple(tuples[j]);
+				} else {
+					virtualDisk.writeBlockToBucket("R1", hashValue, virtualMainMemory.getBlock(hashValue));
+				}
+			}
+		}
+
+		//after all values have been hashed write to disk
+		for (int i = 1; i < 15; i++) {
+			virtualDisk.writeBlockToBucket("R1", i, virtualMainMemory.getBlock(i));
+		}
+		
+		//clean virtual main memory
+		virtualMainMemory.clearMainMemory();
+		
+		rTupleSize = 15 * 8;
+		
+		//sets up initial buckets in the main memory
+		for (int i = 1; i < 15; i++) {
+			virtualMainMemory.writeBlockIntoMainMemory(new Block(), i);
+		}
+		
+		for (int i = 0; i < Math.ceil((double) rTupleSize / blockSize); i++) {
 			diskReadForHashing(virtualDisk, virtualMainMemory, "R2", i);
 			Block mainMemoryBlock = virtualMainMemory.getBlock(0);
 			Tuple[] tuples  = mainMemoryBlock.getAllTuples();
@@ -81,6 +112,9 @@ public class PartBMainClass {
 		
 		//clean virtual main memory
 		virtualMainMemory.clearMainMemory();
+		
+		
+		
 	}
 
 	
