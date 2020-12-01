@@ -30,8 +30,6 @@ public class VirtualDisk {
 		
 		Block[] result = new Block[numOfBlocks];
 		
-		System.out.println(diskBlocks.size());
-		
 		for (int i = 0; i < numOfBlocks; i++) {
 			result[i] = diskBlocks.get(index + i);
 		}
@@ -41,5 +39,10 @@ public class VirtualDisk {
 	@Override
 	public String toString() {
 		return "VirtualDisk \n" + storage;
+	}
+
+	public Block getBlock(String blockType, int index) {
+		List<Block> diskBlocks = storage.get(blockType);
+		return diskBlocks.get(index);
 	}
 }

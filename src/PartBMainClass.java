@@ -21,8 +21,11 @@ public class PartBMainClass {
 		
 		Block[] diskBlocks = virtualDisk.getBlocks(readType, index, numOfBlocks);
 		
-		for (int i = 0; i < diskBlocks.length; i++) {
-			virtualMainMemory.readBlockIntoMainMemory(diskBlocks[i]);
+		Block diskBlock;
+		
+		for (int i = 0; i < numOfBlocks; i++) {
+			diskBlock = virtualDisk.getBlock(readType, index + i);
+			virtualMainMemory.readBlockIntoMainMemory(diskBlock);
 		}
 	}
 	
