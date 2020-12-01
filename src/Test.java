@@ -13,6 +13,11 @@ public class Test {
 		
 		//System.out.println(denseTree.getFirstLeafNode());
 		
+		printTree(denseTree);
+	}
+	
+	private static void printTree(DenseBPlusTree denseTree) {
+		
 		InternalNode root = denseTree.getRoot();
 		
 		Queue<Node> queue = new LinkedList<>();
