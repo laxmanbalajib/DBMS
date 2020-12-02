@@ -31,4 +31,14 @@ public class Node {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public boolean isFull() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void splitLeafNode() {
+		// TODO Auto-generated method stub
+		
+	}
 }

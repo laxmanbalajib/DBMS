@@ -12,8 +12,6 @@ public class Test {
 		
 		denseTree.createTree(arr);
 		
-		//System.out.println(denseTree.getFirstLeafNode());
-		
 		
 		printTree(denseTree);
 		denseTree.insert(4);

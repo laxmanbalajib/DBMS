@@ -71,6 +71,8 @@ public class InternalNode extends Node{
 			return a - b;
 		}
 	}
+	
+	@Override
 	public boolean isFull() {
 		return this.insertIndex == this.order;
 	}

@@ -24,7 +24,7 @@ public class DenseBPlusTree {
 	
 	public void insert(int key) {
 		Node curr = (Node) root;
-		System.out.println("\nsearch\n");
+
 		while(!curr.isLeafNode()) {
 			
 			Integer[] keys = curr.getKeys();
@@ -47,6 +47,10 @@ public class DenseBPlusTree {
 		}
 		
 		curr.insert(key);
+		
+		if (curr.isFull()) {
+			
+		}
 	}
 	
 	private void buildInternalNodes() {
@@ -94,7 +98,6 @@ public class DenseBPlusTree {
 			internalNode = new InternalNode(this.order, internalNodes.get(i));
 			internalNodes.get(i).setParent(internalNode);
 			newInternalNodes.add(internalNode);
-			System.out.println(internalNode.getChildren()[0]);
 			
 			i++;
 			for (int j = 0; j < this.order && i < internalNodes.size(); j++) {

@@ -48,6 +48,8 @@ public class ExternalNode extends Node{
 			return a - b;
 		}
 	}
+	
+	@Override
 	public boolean isFull() {
 		return this.insertIndex == this.order;
 	}
@@ -106,6 +108,24 @@ public class ExternalNode extends Node{
 	public void setParent(Node internalNode) {
 		this.parent = parent;
 		
+	}
+	
+	@Override
+	public void splitLeafNode() {
+		ExternalNode newLeafNode = new ExternalNode(order);
+		
+		int mid = (this.order + 1)/2;
+		
+		
+		
+		for (int i = mid; i < this.order + 1; i++) {
+			newLeafNode.insert(this.keys[i]);
+			this.keys[i] = null; //delete
+			this.insertIndex--;
+		}
+		
+		newLeafNode.setNextExternalNode(this.nextExternalNode);
+		this.nextExternalNode = newLeafNode;
 	}
 
 }
