@@ -4,28 +4,20 @@ import projectPartA.*;
 public class PartAMainClass {
 	public static void main(String args[]) {
 		
+		Random rn = new Random();
+		
+		int[] bValueRange = new int[] { 100000, 200000 };
+
+		int bUpperBound = bValueRange[1] - bValueRange[0];
+		
 		Integer[] records = generateRecords();
 		
-		Integer[] arr = new Integer[] {1,2,3,5,6,7,8,18,9,10,11,12,13,14,15,17,18};
+
 		
-		DenseBPlusTree denseTree  = new DenseBPlusTree(4);
-	
+		DenseBPlusTree denseTree;
+
 		
-		denseTree.createTree(arr);
-		
-		
-		//printTree(denseTree);
-		denseTree.insert(19);
-		
-		//printTree(denseTree);
-		
-		SparseBPlusTree sparseTree = new SparseBPlusTree(4);
-	
-		sparseTree.createTree(arr);
-		
-		//printTree(sparseTree);
-		
-		
+		SparseBPlusTree sparseTree;
 		
 		
 		denseTree  = new DenseBPlusTree(13);
@@ -33,33 +25,38 @@ public class PartAMainClass {
 		
 		denseTree.createTree(records);
 		
+		denseTree.insert(bValueRange[0] + rn.nextInt(bUpperBound));
+		denseTree.insert(bValueRange[0] + rn.nextInt(bUpperBound));
 		
-		//printTree(denseTree);
 		
-		
-		sparseTree = new SparseBPlusTree(13);
-		
-		sparseTree.createTree(records);
-		
-		//printTree(sparseTree);
+		denseTree.search(bValueRange[0] + rn.nextInt(bUpperBound));
+		denseTree.search(bValueRange[0] + rn.nextInt(bUpperBound));
+
+
 		
 
 		denseTree  = new DenseBPlusTree(24);
 	
-		
 		denseTree.createTree(records);
 		
+		denseTree.insert(bValueRange[0] + rn.nextInt(bUpperBound));
+		denseTree.insert(bValueRange[0] + rn.nextInt(bUpperBound));
 		
-		//printTree(denseTree);
+		denseTree.search(bValueRange[0] + rn.nextInt(bUpperBound));
+		denseTree.search(bValueRange[0] + rn.nextInt(bUpperBound));
 		
+
+		sparseTree = new SparseBPlusTree(13);
+		
+		sparseTree.createTree(records);
 
 		sparseTree = new SparseBPlusTree(24);
 		
 		sparseTree.createTree(records);
 		
-		//printTree(sparseTree);
+		
 
-		denseTree.search(199972);
+		
 	
 	}
 	

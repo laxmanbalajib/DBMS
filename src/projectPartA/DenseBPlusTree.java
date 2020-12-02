@@ -61,6 +61,9 @@ public class DenseBPlusTree {
 		}
 	}
 	public void insert(int key) {
+		
+		System.out.println("Inserting key " + key);
+		
 		Node curr = (Node) root;
 
 		while(!curr.isLeafNode()) {
@@ -86,7 +89,10 @@ public class DenseBPlusTree {
 		}
 		
 		if (!curr.isFull()) {
+			System.out.println("Node is not full");
 			curr.insert(key);
+			System.out.println(curr);
+			System.out.println("");
 		}else{
 			curr.insert(key);
 			System.out.println("Node is full");
