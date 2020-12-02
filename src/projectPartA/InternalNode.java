@@ -29,6 +29,7 @@ public class InternalNode extends Node{
 		this.children[this.insertIndex + 1] = child;
 
 		Arrays.sort(this.keys, new sortByKey());
+		
 		Arrays.sort(this.children, new sortByFirstKey());
 		
 		this.insertIndex++;
@@ -40,6 +41,9 @@ public class InternalNode extends Node{
 			if (a == null) return 1;
 			
 			if (b == null) return -1;
+			
+			if (a.getKeys()[0] == null) return 1;
+			if (b.getKeys()[0] == null) return -1;
 			
 			return a.getKeys()[0] - b.getKeys()[0];
 		}
@@ -108,6 +112,37 @@ public class InternalNode extends Node{
 	@Override
 	public Node[] getChildren() {
 		return this.children;
+	}
+
+	@Override
+	public NodeKeyPair splitInternalNode() {
+		NodeKeyPair result = new NodeKeyPair();
+		
+		int mid = (this.order + 1) / 2;
+		int key = this.keys[mid];
+		Node leftMostChild = this.children[mid];
+		
+		this.keys[mid] = null; //delete
+		this.insertIndex--;
+		
+		InternalNode newInternalNode  = new InternalNode(this.order, leftMostChild);
+		leftMostChild.setParent(newInternalNode);
+		
+		
+		for (int i = mid + 1; i < this.order + 1;i++) {
+			this.children[i].setParent(newInternalNode);
+			newInternalNode.insert(this.keys[i], this.children[i]);
+			this.children[i] = null; //delete
+			this.keys[i] = null; //delete
+			this.insertIndex--;
+		}
+		
+		Arrays.sort(this.keys, new sortByKey());
+		
+		Arrays.sort(this.children, new sortByFirstKey());
+		result.key = key;
+		result.node = newInternalNode;
+		return result;
 	}
 
 }

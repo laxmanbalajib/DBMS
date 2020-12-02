@@ -41,4 +41,29 @@ public class Node {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public Node getNextExternalNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setParent(Node internalNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isHalfFull() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public InternalNode getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public NodeKeyPair splitInternalNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

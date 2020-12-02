@@ -17,11 +17,78 @@ public class SparseBPlusTree {
 		Arrays.sort(arr, (a,b) -> (b - a));
 		
 		buildLeafNodes(arr);
-		//densify();
 		
 		buildInternalNodes();
 	}
 	
+	public void search(int key) {
+		Node curr = (Node) root;
+		
+		while(!curr.isLeafNode()) {
+			Integer[] keys = curr.getKeys();
+			
+			int i = 0;
+			
+			Node[] children = curr.getChildren();
+			while(i < keys.length + 1) {
+				if (i == keys.length) {
+					curr = curr.getChildren()[i];
+					break;
+				}
+				if (keys[i] == null || key < keys[i]) {
+					curr = children[i];
+					break;
+				}
+				i++;
+			}
+			//has reached here so last child
+			
+			
+		}
+		System.out.println("\nSearch is now at leaf node");
+		Integer[] keys = curr.getKeys();
+		for (int i = 0; i < keys.length; i++) {
+			if (keys[i] == null) {
+				System.out.println(key + " Not found");
+				break;
+			}
+			
+			if (keys[i] == key) {
+				System.out.println(key + " Found at " + i + "in node " + curr);
+			}
+		}
+	}
+	public void insert(int key) {
+		Node curr = (Node) root;
+
+		while(!curr.isLeafNode()) {
+			
+			Integer[] keys = curr.getKeys();
+			
+			int i = 0;
+			
+			Node[] children = curr.getChildren();
+			while(i < keys.length + 1) {
+				if (i == keys.length) {
+					curr = curr.getChildren()[i];
+					break;
+				}
+				if (keys[i] == null || key < keys[i]) {
+					curr = children[i];
+					break;
+				}
+				i++;
+			}
+			//has reached here so last child
+			
+		}
+		
+		curr.insert(key);
+		
+		if (curr.isFull()) {
+			
+		}
+	}
 	private void buildInternalNodes() {
 		ExternalNode nextNode = null;
 		ExternalNode currNode = this.firstLeafNode;
@@ -35,7 +102,7 @@ public class SparseBPlusTree {
 			internalNode = new InternalNode(this.order, currNode);
 			
 			internalNodes.add(internalNode);
-			
+			currNode.setParent(internalNode);
 			currNode = currNode.getNextExternalNode();
 			i++;
 			
@@ -67,7 +134,6 @@ public class SparseBPlusTree {
 			internalNode = new InternalNode(this.order, internalNodes.get(i));
 			internalNodes.get(i).setParent(internalNode);
 			newInternalNodes.add(internalNode);
-			System.out.println(internalNode.getChildren()[0]);
 			
 			i++;
 			for (int j = 0; j < this.order/2 && i < internalNodes.size(); j++) {
@@ -87,6 +153,7 @@ public class SparseBPlusTree {
 		}
 		
 		if (newInternalNodes.size() == 1) this.root = internalNode;
+		if (newInternalNodes.size() != 1) buildInternalNodes(newInternalNodes);
 	}
 	
 	private void buildLeafNodes(Integer[] arr) {
@@ -107,21 +174,6 @@ public class SparseBPlusTree {
 		this.firstLeafNode = nextNode;
 	}
 	
-	private void densify() {
-		ExternalNode nextNode = null;
-		ExternalNode currNode = this.firstLeafNode;
-		
-		while(currNode.getNextExternalNode() != null) {
-			
-			nextNode = currNode.getNextExternalNode();
-			while (!currNode.isHalfFull()) {
-				int key = nextNode.lend();
-				currNode.insert(key);
-			}
-			currNode = nextNode;
-			
-		}
-	}
 	
 	public ExternalNode getFirstLeafNode() {
 		return this.firstLeafNode;

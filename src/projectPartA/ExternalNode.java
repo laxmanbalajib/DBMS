@@ -54,10 +54,12 @@ public class ExternalNode extends Node{
 		return this.insertIndex == this.order;
 	}
 	
+	@Override
 	public boolean isHalfFull() {
 		return this.insertIndex >= 1 + this.order/2;
 	}
 
+	@Override
 	public ExternalNode getNextExternalNode() {
 		return nextExternalNode;
 	}
@@ -75,6 +77,7 @@ public class ExternalNode extends Node{
 		this.keys = keys;
 	}
 	
+	@Override
 	public InternalNode getParent() {
 		return parent;
 	}
@@ -105,6 +108,7 @@ public class ExternalNode extends Node{
 		//return "ExternalNode [" + Arrays.toString(keys) + "]" +"Parent -> "+ this.parent + " next -> " + this.nextExternalNode ; 
 	}
 
+	@Override
 	public void setParent(Node internalNode) {
 		this.parent = parent;
 		
