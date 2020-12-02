@@ -18,6 +18,7 @@ public class ExternalNode extends Node{
 		this.keys = new Integer[this.order + 1];
 	}
 
+	@Override
 	public void insert(int key) {
 		this.keys[this.insertIndex] = key;
 

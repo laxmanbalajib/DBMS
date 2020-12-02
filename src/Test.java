@@ -5,7 +5,7 @@ public class Test {
 	public static void main(String args[]) {
 		
 		
-		Integer[] arr = new Integer[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
+		Integer[] arr = new Integer[] {1,2,3,5,6,7,8,18,9,10,11,12,13,14,15,17,18};
 		
 		DenseBPlusTree denseTree  = new DenseBPlusTree(4);
 	
@@ -16,7 +16,8 @@ public class Test {
 		
 		
 		printTree(denseTree);
-		
+		denseTree.insert(4);
+		printTree(denseTree);
 		
 		SparseBPlusTree sparseTree = new SparseBPlusTree(4);
 		

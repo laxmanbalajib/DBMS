@@ -22,6 +22,33 @@ public class DenseBPlusTree {
 		buildInternalNodes();
 	}
 	
+	public void insert(int key) {
+		Node curr = (Node) root;
+		System.out.println("\nsearch\n");
+		while(!curr.isLeafNode()) {
+			
+			Integer[] keys = curr.getKeys();
+			
+			int i = 0;
+			
+			Node[] children = curr.getChildren();
+			while(i < keys.length + 1) {
+				if (i == keys.length) {
+					curr = curr.getChildren()[i];
+					break;
+				}
+				if (keys[i] == null || key < keys[i]) {
+					curr = children[i];
+					break;
+				}
+			}
+			//has reached here so last child
+			
+		}
+		
+		curr.insert(key);
+	}
+	
 	private void buildInternalNodes() {
 		ExternalNode nextNode = null;
 		ExternalNode currNode = this.firstLeafNode;

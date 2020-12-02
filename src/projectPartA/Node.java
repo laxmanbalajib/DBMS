@@ -26,4 +26,9 @@ public class Node {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void insert(int key) {
+		// TODO Auto-generated method stub
+		
+	}
 }
